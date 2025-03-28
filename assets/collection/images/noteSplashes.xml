@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="noteSplashes.png">
+	<SubTexture name="vanilla 10000" x="0" y="316" width="207" height="288" frameX="-35" frameY="-14" frameWidth="278" frameHeight="316"/>
+	<SubTexture name="vanilla 10001" x="790" y="275" width="231" height="283" frameX="-23" frameY="-17" frameWidth="278" frameHeight="316"/>
+	<SubTexture name="vanilla 10002" x="278" y="0" width="270" height="308" frameX="-4" frameY="-4" frameWidth="278" frameHeight="316"/>
+	<SubTexture name="vanilla 10003" x="0" y="0" width="278" height="316"/>
+	<SubTexture name="vanilla 20000" x="831" y="0" width="187" height="219" frameX="-49" frameY="-36" frameWidth="291" frameHeight="283"/>
+	<SubTexture name="vanilla 20001" x="278" y="308" width="244" height="255" frameX="-21" frameY="-18" frameWidth="291" frameHeight="283"/>
+	<SubTexture name="vanilla 20002" x="548" y="0" width="283" height="275" frameX="0" frameY="-8" frameWidth="291" frameHeight="283"/>
+	<SubTexture name="vanilla 20003" x="548" y="275" width="242" height="276" frameX="-49" frameY="0" frameWidth="291" frameHeight="283"/>
+</TextureAtlas>
