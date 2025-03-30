@@ -116,6 +116,7 @@ class ChartingState extends MusicBeatState
 				needsVoices: true,
 				player1: 'bf',
 				player2: 'bf',
+				player3: 'bf',
 				speed: 1,
 				validScore: false,
 				stage: 'stage',
@@ -252,9 +253,15 @@ class ChartingState extends MusicBeatState
 		});
 		player2DropDown.selectedLabel = _song.player2;
 
+		var player3DropDown = new FlxUIDropDownMenu(140, 140, FlxUIDropDownMenu.makeStrIdLabelArray(characters, true), function(character:String)
+		{
+			_song.player3 = characters[Std.parseInt(character)];
+		});
+		player3DropDown.selectedLabel = _song.player3;
+
 		var assetModifiers:Array<String> = CoolUtil.returnAssetsLibrary('UI/default');
 
-		var assetModifierDropDown = new FlxUIDropDownMenu(player2DropDown.x, player2DropDown.y + 40,
+		var assetModifierDropDown = new FlxUIDropDownMenu(player1DropDown.x, player1DropDown.y + 40,
 			FlxUIDropDownMenu.makeStrIdLabelArray(assetModifiers, true), function(character:String)
 		{
 			_song.assetModifier = assetModifiers[Std.parseInt(character)];
@@ -282,6 +289,7 @@ class ChartingState extends MusicBeatState
 		tab_group_song.add(stepperSpeed);
 		tab_group_song.add(player1DropDown);
 		tab_group_song.add(player2DropDown);
+		tab_group_song.add(player3DropDown);
 		tab_group_song.add(playTicksBf);
 		tab_group_song.add(playTicksDad);
 		tab_group_song.add(assetModifierDropDown);

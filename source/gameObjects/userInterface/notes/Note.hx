@@ -108,6 +108,8 @@ class Note extends FNFSprite
 	{
 		var newNote:Note = new Note(strumTime, noteData, noteAlt, prevNote, isSustainNote);
 
+		newNote.noteType = noteType;
+
 		// frames originally go here
 		switch (assetModifier)
 		{
@@ -182,6 +184,8 @@ class Note extends FNFSprite
 	public static function returnQuantNote(assetModifier, strumTime, noteData, noteType, noteAlt, ?isSustainNote:Bool = false, ?prevNote:Note = null):Note
 	{
 		var newNote:Note = new Note(strumTime, noteData, noteAlt, prevNote, isSustainNote);
+
+		newNote.noteType = noteType;
 
 		// actually determine the quant of the note
 		if (newNote.noteQuant == -1)

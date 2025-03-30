@@ -67,12 +67,13 @@ class PlayState extends MusicBeatState
 	public static var campaignScore:Int = 0;
 
 	public static var dadOpponent:Character;
+	public static var secondOpponent:Character;
 	public static var gf:Character;
 	public static var boyfriend:Boyfriend;
 
 	// hold sustains
 	var frozenCharacters:ObjectMap<Character, Bool> = new ObjectMap();
-	public var characters:Array<Character> = [boyfriend, dadOpponent, gf];
+	public var characters:Array<Character> = [boyfriend, dadOpponent, gf, secondOpponent];
 	public var animSuffix:String;
 	public var animCancelled:Bool = false;
 
@@ -260,6 +261,7 @@ class PlayState extends MusicBeatState
 		gf.scrollFactor.set(1, 1);
 
 		dadOpponent = new Character().setCharacter(50, 850, SONG.player2);
+		secondOpponent = new Character().setCharacter(-50, 850, SONG.player3);
 		boyfriend = new Boyfriend();
 		boyfriend.setCharacter(750, 850, SONG.player1);
 		// if you want to change characters later use setCharacter() instead of new or it will break
@@ -280,12 +282,14 @@ class PlayState extends MusicBeatState
 		add(gf);
 
 		add(dadOpponent);
+		add(secondOpponent);
 		add(boyfriend);
 
 		add(stageBuild.foreground);
 
 		// force them to dance
 		dadOpponent.dance();
+		secondOpponent.dance();
 		gf.dance();
 		boyfriend.dance();
 
@@ -528,6 +532,13 @@ class PlayState extends MusicBeatState
 				var getCenterY = char.getMidpoint().y;
 
 				camFollow.setPosition(getCenterX + camDisplaceX + char.characterData.camOffsetX, getCenterY + camDisplaceY + char.characterData.camOffsetY);
+			case SECOND:
+				var char = secondOpponent;
+
+				var getCenterX = char.getMidpoint().x;
+				var getCenterY = char.getMidpoint().y;
+
+				camFollow.setPosition(getCenterX + camDisplaceX + char.characterData.camOffsetX, getCenterY + camDisplaceY + char.characterData.camOffsetY);
 			case BF:
 				var char = boyfriend;
 
@@ -729,7 +740,7 @@ class PlayState extends MusicBeatState
 			persistentUpdate = false;
 			paused = true;
 			resetMusic();
-			MusicBeatState.switchState(new ChartingState());
+			MusicBeatState.switchState(new ChartingStatePsych());
 		}
 
 	// maybe theres a better place to put this, idk -saw
