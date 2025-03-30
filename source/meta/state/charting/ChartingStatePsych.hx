@@ -1,4 +1,4 @@
-package editors;
+package meta.state.charting;
 
 #if desktop
 import Discord.DiscordClient;
