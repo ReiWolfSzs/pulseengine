@@ -45,6 +45,7 @@ import openfl.net.FileReference;
 import openfl.utils.Assets as OpenFlAssets;
 import openfl.utils.ByteArray;
 import meta.data.AttachedSprite;
+import gameObjects.userInterface.notes.Strumline;
 
 using StringTools;
 #if sys
@@ -111,7 +112,7 @@ class ChartingState extends MusicBeatState
 	var camPos:FlxObject;
 	var strumLine:FlxSprite;
 	var quant:AttachedSprite;
-	var strumLineNotes:FlxTypedGroup<StrumNote>;
+	var strumLineNotes:FlxTypedGroup<Strumline>;
 	var curSong:String = 'Test';
 	var amountSteps:Int = 0;
 	var bullshitUI:FlxGroup;
