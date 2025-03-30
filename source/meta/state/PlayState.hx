@@ -741,7 +741,7 @@ class PlayState extends MusicBeatState
 			persistentUpdate = false;
 			paused = true;
 			resetMusic();
-			MusicBeatState.switchState(new ChartingStatePsych());
+			FlxG.switchState(new ChartingStatePsych());
 		}
 
 	// maybe theres a better place to put this, idk -saw
