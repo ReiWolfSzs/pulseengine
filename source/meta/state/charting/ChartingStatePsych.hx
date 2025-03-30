@@ -1,15 +1,13 @@
 package meta.state.charting;
 
-#if desktop
-import Discord.DiscordClient;
-#end
+import meta.MusicBeat.MusicBeatState;
 import flash.geom.Rectangle;
 import haxe.Json;
 import haxe.format.JsonParser;
 import haxe.io.Bytes;
-import Conductor.BPMChangeEvent;
-import Section.SwagSection;
-import Song.SwagSong;
+import meta.data.Conductor.BPMChangeEvent;
+import meta.data.Section.SwagSection;
+import meta.data.Song.SwagSong;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
@@ -230,11 +228,6 @@ class ChartingState extends MusicBeatState
 		}
 
 		// Paths.clearMemory();
-
-		#if desktop
-		// Updating Discord Rich Presence
-		DiscordClient.changePresence("Chart Editor", StringTools.replace(_song.song, '-', ' '));
-		#end
 
 		vortex = FlxG.save.data.chart_vortex;
 		ignoreWarnings = FlxG.save.data.ignoreWarnings;

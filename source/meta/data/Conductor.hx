@@ -18,6 +18,7 @@ typedef BPMChangeEvent =
 	var stepTime:Int;
 	var songTime:Float;
 	var bpm:Float;
+	@:optional var stepCrochet:Float;
 }
 
 class Conductor
