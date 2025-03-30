@@ -44,6 +44,7 @@ enum Focus
 {
 	BF;
 	DAD;
+	SECOND;
 	CENTER;
 	NONE;
 }
