@@ -51,27 +51,25 @@ class ClassHUD extends FlxTypedGroup<FlxBasic>
 		// call the initializations and stuffs
 		super();
 
-		// le healthbar setup
-		healthBarBG = new FlxSprite(0,
-			350).loadGraphic(Paths.image(ForeverTools.returnSkinAsset('healthBar', PlayState.assetModifier, PlayState.changeableSkin, 'UI')));
-		healthBarBG.angle = 90;
-		healthBarBG.x = (FlxG.width - healthBarBG.width) + 130;
-		healthBarBG.scrollFactor.set();
+		var barY = FlxG.height * 0.875;
+		if (Init.trueSettings.get('Downscroll')) barY = 64;
+
+		healthBarBG = new FlxSprite(0, barY).loadGraphic(Paths.image(ForeverTools.returnSkinAsset('healthBar', PlayState.assetModifier, PlayState.changeableSkin, 'UI')));
+		healthBarBG.screenCenter(X);
+		healthBarBG.scale.set(1.5, 1);
 		add(healthBarBG);
 
 		healthBar = new FlxBar(healthBarBG.x + 4, healthBarBG.y + 4, RIGHT_TO_LEFT, Std.int(healthBarBG.width - 8), Std.int(healthBarBG.height - 8));
-		healthBar.scrollFactor.set();
-		healthBar.angle = 90;
-		healthBar.createFilledBar(0xFF000000, 0xFFFFFFFF);
-		// healthBar
+		healthBar.createFilledBar(0xFFFF0000, 0xFF00FF00);
+		healthBar.scale.set(1.5, 1);
 		add(healthBar);
 
 		iconP1 = new HealthIcon(PlayState.SONG.player1, true);
-		iconP1.y = healthBar.y;
+		iconP1.y = healthBar.y - 100;
 		add(iconP1);
 
 		iconP2 = new HealthIcon(PlayState.SONG.player2, false);
-		iconP2.y = healthBar.y;
+		iconP2.y = healthBar.y - 100;
 		add(iconP2);
 
 		scoreBar = new FlxText(690, 653, 0, scoreDisplay);
@@ -186,13 +184,10 @@ class ClassHUD extends FlxTypedGroup<FlxBasic>
 
 	public function beatHit()
 	{
-		if (!Init.trueSettings.get('Reduced Movements'))
-		{
-			iconP1.setGraphicSize(Std.int(iconP1.width + 30));
-			iconP2.setGraphicSize(Std.int(iconP2.width + 30));
+		iconP1.setGraphicSize(Std.int(iconP1.width + 30));
+		iconP2.setGraphicSize(Std.int(iconP2.width + 30));
 
-			iconP1.updateHitbox();
-			iconP2.updateHitbox();
-		}
+		iconP1.updateHitbox();
+		iconP2.updateHitbox();
 	}
 }

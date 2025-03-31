@@ -1061,8 +1061,6 @@ class PlayState extends MusicBeatState
 			character.playAnim('sing' + stringDirection.toUpperCase() + 'miss', lockMiss);
 		}
 		decreaseCombo(popMiss);
-
-		//
 	}
 
 	function characterPlayAnimation(coolNote:Note, character:Character)
@@ -1566,6 +1564,10 @@ class PlayState extends MusicBeatState
 		if ((dadOpponent.animation.curAnim.name.startsWith("idle") || dadOpponent.animation.curAnim.name.startsWith("dance"))
 			&& (curBeat % 2 == 0 || dadOpponent.characterData.quickDancer))
 			dadOpponent.dance();
+
+		if ((secondOpponent.animation.curAnim.name.startsWith("idle") || secondOpponent.animation.curAnim.name.startsWith("dance"))
+			&& (curBeat % 2 == 0 || secondOpponent.characterData.quickDancer))
+			secondOpponent.dance();
 	}
 
 	override function beatHit() {

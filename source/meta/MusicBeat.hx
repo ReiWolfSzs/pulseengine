@@ -11,7 +11,6 @@ import meta.data.*;
 import meta.data.Conductor.BPMChangeEvent;
 import meta.data.dependency.FNFUIState;
 import flixel.FlxState;
-import meta.state.charting.ChartingStatePsych;
 
 /* 
 	Music beat state happens to be the first thing on my list of things to add, it just so happens to be the backbone of

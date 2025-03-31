@@ -14,8 +14,7 @@ import openfl.media.Sound;
 import openfl.system.System;
 import openfl.utils.AssetType;
 import openfl.utils.Assets as OpenFlAssets;
-import sys.FileSystem;
-import sys.io.File;
+
 
 class Paths {
 	// Here we set up the paths class. This will be used to
@@ -70,7 +69,7 @@ class Paths {
 						openfl.Assets.cache.removeBitmapData(key);
 						FlxG.bitmap._cache.remove(key);
 					}
-					trace('removed $key, ' + (isTexture ? 'is a texture' : 'is not a texture'));
+					//trace('removed $key, ' + (isTexture ? 'is a texture' : 'is not a texture'));
 					
 					obj.destroy();
 					currentTrackedAssets.remove(key);
@@ -78,7 +77,7 @@ class Paths {
 				}
 			}
 		}
-		trace('removed $counter assets');
+		//trace('removed $counter assets');
 		// run the garbage collector for good measure lmfao
 		System.gc();
 	}
@@ -122,11 +121,11 @@ class Paths {
 					bitmap.dispose();
 					bitmap.disposeImage();
 					bitmap = null;
-					trace('new texture $key, bitmap is $bitmap');
+					//trace('new texture $key, bitmap is $bitmap');
 					newGraphic = FlxGraphic.fromBitmapData(BitmapData.fromTexture(texture), false, key, false);
 				} else {
 					newGraphic = FlxGraphic.fromBitmapData(bitmap, false, key, false);
-					trace('new bitmap $key, not textured');
+					//trace('new bitmap $key, not textured');
 				}
 				currentTrackedAssets.set(key, newGraphic);
 			}
@@ -254,4 +253,6 @@ class Paths {
 	inline static public function getPackerAtlas(key:String, ?library:String) {
 		return (FlxAtlasFrames.fromSpriteSheetPacker(image(key, library), file('images/$key.txt', library)));
 	}
+
+
 }
