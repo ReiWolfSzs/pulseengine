@@ -38,6 +38,10 @@ class Stage extends FlxTypedGroup<FlxBasic> {
 	var moonHills:FlxSprite;
 	var moonFloor:FlxSprite;
 	var moonFore:FlxSprite;
+
+	var acriBG:FlxSprite;
+	var acriCrowd:FlxSprite;
+	var acriBoombox:FlxSprite;
 	public function new(curStage) {
 		super();
 		this.curStage = curStage;
@@ -45,12 +49,20 @@ class Stage extends FlxTypedGroup<FlxBasic> {
 		switch (CoolUtil.spaceToDash(PlayState.SONG.song.toLowerCase())) {
 			case "moonlight":
 				curStage = 'hell';
+			case "acrimony":
+				curStage = 'escola';
 			default:
 				curStage = 'stage';
 		}
 
 		game.curStage = curStage;
 		switch (curStage) {
+			case 'escola':
+				game.defaultCamZoom = 0.6;
+
+				acriBG = new FlxSprite(0, 0).loadGraphic(Paths.image('school/bg/bg', direct));
+				acriBG.scale.set(0.5, 0.5);
+				background.add(acriBG);
 			case 'hell':
 				game.defaultCamZoom = 0.5;
 
@@ -127,6 +139,9 @@ class Stage extends FlxTypedGroup<FlxBasic> {
 
 	public function repositionPlayers(curStage, boyfriend:Character, dad:Character, gf:Character):Void {
 		switch (curStage) {
+			case 'escola':
+				dad.setPosition(1700, 1800);
+				boyfriend.setPosition(2700, 1950);
 			case 'hell':
 				dad.setPosition(540, 920);
 				boyfriend.setPosition(2080, 950);

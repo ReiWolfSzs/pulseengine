@@ -103,6 +103,31 @@ class Character extends FNFSprite
 				animation.addByPrefix('singRIGHT', 'r', 24, false);
 				animation.addByPrefix('singDOWN', 'd', 24, false);
 				playAnim('idle');
+			case 'bf-school':
+				frames = Paths.getSparrowAtlas('school/characters/bf', direct);
+				animation.addByPrefix('idle', 'idle', 24, false);
+				animation.addByPrefix('singUP', 'up', 24, false);
+				animation.addByPrefix('singLEFT', 'left', 24, false);
+				animation.addByPrefix('singRIGHT', 'right', 24, false);
+				animation.addByPrefix('singDOWN', 'down', 24, false);
+				animation.addByPrefix('singUPmiss', 'miss up', 24, false);
+				animation.addByPrefix('singLEFTmiss', 'miss left', 24, false);
+				animation.addByPrefix('singRIGHTmiss', 'miss right', 24, false);
+				animation.addByPrefix('singDOWNmiss', 'miss down', 24, false);
+				playAnim('idle');
+
+				flipX = true;
+				characterData.offsetY = -70;
+			case 'abby':
+				frames = Paths.getSparrowAtlas('school/characters/abby', direct);
+				animation.addByPrefix('idle', 'idle', 24, false);
+				animation.addByPrefix('singUP', 'up', 24, false);
+				animation.addByPrefix('singLEFT', 'left', 24, false);
+				animation.addByPrefix('singRIGHT', 'right', 24, false);
+				animation.addByPrefix('singDOWN', 'down', 24, false);
+				playAnim('idle');
+
+				characterData.offsetY = -70;
 			case 'bf':
 				frames = Paths.getSparrowAtlas('characters/BOYFRIEND');
 				animation.addByPrefix('idle', 'BF idle dance', 24, false);

@@ -54,8 +54,8 @@ class Main extends Sprite {
 	// heres gameweeks set up!
 	public static var gameWeeks:Array<Dynamic> = [
 		[
-			['moonlight'],
-			['tails'],
+			['moonlight', 'acrimony'],
+			['tails', 'bf'],
 			[FlxColor.fromRGB(50, 50, 50)],
 			'suamae!!!'
 		]

@@ -28,7 +28,7 @@ import meta.*;
 import meta.MusicBeat.MusicBeatState;
 import meta.data.*;
 import meta.data.Song.SwagSong;
-import meta.state.charting.ChartingStatePsych;
+import meta.state.charting.*;
 import meta.state.menus.*;
 import meta.subState.*;
 import openfl.events.KeyboardEvent;
@@ -741,7 +741,7 @@ class PlayState extends MusicBeatState
 			persistentUpdate = false;
 			paused = true;
 			resetMusic();
-			FlxG.switchState(new ChartingStatePsych());
+			FlxG.switchState(new ChartingState());
 		}
 
 	// maybe theres a better place to put this, idk -saw

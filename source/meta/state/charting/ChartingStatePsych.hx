@@ -45,7 +45,9 @@ import openfl.net.FileReference;
 import openfl.utils.Assets as OpenFlAssets;
 import openfl.utils.ByteArray;
 import meta.data.AttachedSprite;
-import gameObjects.userInterface.notes.Strumline;
+import gameObjects.userInterface.notes.*;
+import gameObjects.userInterface.*;
+import meta.data.dependency.*;
 
 using StringTools;
 #if sys
