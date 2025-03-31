@@ -178,7 +178,7 @@ class OptionsSubstate extends MusicBeatSubState
 	private function updateSelection(equal:Int = 0)
 	{
 		if (equal != curSelection)
-			FlxG.sound.play(Paths.sound('scrollMenu'));
+			FlxG.sound.play(Paths.sound('system/scroll'));
 		var prevSelection:Int = curSelection;
 		curSelection = equal;
 		// wrap the current selection
@@ -229,7 +229,7 @@ class OptionsSubstate extends MusicBeatSubState
 						curHorizontalSelection = 0;
 
 					// update stuffs
-					FlxG.sound.play(Paths.sound('scrollMenu'));
+					FlxG.sound.play(Paths.sound('system/scroll'));
 				}
 			}
 
