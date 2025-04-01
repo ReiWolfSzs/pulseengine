@@ -93,11 +93,11 @@ class Character extends FNFSprite
 				animation.addByPrefix('singLEFT', 'BF NOTE LEFT0', 24, true);
 				animation.addByPrefix('singRIGHT', 'BF NOTE RIGHT0', 24, true);
 				animation.addByPrefix('singDOWN', 'BF NOTE DOWN0', 24, true);
-				animation.addByPrefix('singUPmiss', 'BF NOTE UP MISS', 24, true);
-				animation.addByPrefix('singLEFTmiss', 'BF NOTE LEFT MISS', 24, true);
-				animation.addByPrefix('singRIGHTmiss', 'BF NOTE RIGHT MISS', 24, true);
-				animation.addByPrefix('singDOWNmiss', 'BF NOTE DOWN MISS', 24, true);
-				animation.addByPrefix('hey', 'BF HEY', 24, true);
+				animation.addByPrefix('singUPmiss', 'BF NOTE UP MISS', 24, false);
+				animation.addByPrefix('singLEFTmiss', 'BF NOTE LEFT MISS', 24, false);
+				animation.addByPrefix('singRIGHTmiss', 'BF NOTE RIGHT MISS', 24, false);
+				animation.addByPrefix('singDOWNmiss', 'BF NOTE DOWN MISS', 24, false);
+				animation.addByPrefix('hey', 'BF HEY', 24, false);
 				playAnim('idle');
 
 				flipX = true;

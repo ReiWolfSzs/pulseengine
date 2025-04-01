@@ -108,6 +108,10 @@ class ChartingState extends MusicBeatState
 	var cursorNormal:FlxSprite;
 	var cursorAdd:FlxSprite;
 
+	var lilStage:FlxSprite;
+	var lilBf:FlxSprite;
+	var lilOpp:FlxSprite;
+	
 	var noteTypes:Array<String> = [
 		"Normal",
 		"Second Opponent",
@@ -127,6 +131,31 @@ class ChartingState extends MusicBeatState
 
 		var gridBlackLine:FlxSprite = new FlxSprite(gridBG.x + gridBG.width / 2, 37).makeGraphic(2, Std.int(gridBG.height), FlxColor.BLACK);
 		add(gridBlackLine);
+
+		lilStage = new FlxSprite(740, 450).loadGraphic(Paths.image('menus/chart/lilStage'));
+		lilStage.scrollFactor.set();
+		add(lilStage);
+
+		lilBf = new FlxSprite(740, 432).loadGraphic(Paths.image("menus/chart/lilBf"), true, 300, 256);
+		lilBf.animation.add("idle", [0, 1], 12, true);
+		lilBf.animation.add("0", [3, 4, 5], 12, false);
+		lilBf.animation.add("1", [6, 7, 8], 12, false);
+		lilBf.animation.add("2", [9, 10, 11], 12, false);
+		lilBf.animation.add("3", [12, 13, 14], 12, false);
+		lilBf.animation.add("yeah", [17, 20, 23], 12, false);
+		lilBf.animation.play("idle");
+		lilBf.scrollFactor.set();
+		add(lilBf);
+
+		lilOpp = new FlxSprite(740, 432).loadGraphic(Paths.image("menus/chart/lilOpp"), true, 300, 256);
+		lilOpp.animation.add("idle", [0, 1], 12, true);
+		lilOpp.animation.add("0", [3, 4, 5], 12, false);
+		lilOpp.animation.add("1", [6, 7, 8], 12, false);
+		lilOpp.animation.add("2", [9, 10, 11], 12, false);
+		lilOpp.animation.add("3", [12, 13, 14], 12, false);
+		lilOpp.animation.play("idle");
+		lilOpp.scrollFactor.set();
+		add(lilOpp);
 
 		curRenderedNotes = new FlxTypedGroup<Note>();
 		curRenderedNoteTypes = new FlxTypedGroup<FlxText>();
@@ -574,18 +603,6 @@ class ChartingState extends MusicBeatState
 			}
 		}
 
-		curRenderedNotes.forEachAlive(function(note:Note) {
-			if (note.strumTime < songMusic.time) {
-				var data:Int = note.noteData % 4;
-				if (songMusic.playing && !playedSound[data] && note.noteData > -1 && note.strumTime >= lastSongPos) {
-					if ((playTicksBf.checked) && (note.mustPress) || (playTicksDad.checked) && (!note.mustPress)) {
-						FlxG.sound.play(Paths.sound('soundNoteTick'));
-						playedSound[data] = true;
-					}
-				}
-			}
-		});
-
 		strumLine.y = getYfromStrum((Conductor.songPosition - sectionStartTime()) % (Conductor.stepCrochet * _song.notes[curSection].lengthInSteps));
 		if (curBeat % 4 == 0 && curStep >= 16 * (curSection + 1)) {
 			//trace(curStep);
@@ -647,6 +664,26 @@ class ChartingState extends MusicBeatState
 		} else {
 			FlxG.mouse.load(cursorNormal.pixels, 1);
 		}
+
+		curRenderedNotes.forEachAlive(function(note:Note) {
+			if (note.strumTime < songMusic.time) {
+				var data:Int = note.noteData % 4;
+				if (songMusic.playing && !playedSound[data] && note.noteData > -1 && note.strumTime >= lastSongPos) {
+					if ((playTicksBf.checked) && (note.mustPress) || (playTicksDad.checked) && (!note.mustPress)) {
+						FlxG.sound.play(Paths.sound('soundNoteTick'));
+						playedSound[data] = true;
+					}
+					
+				}
+				if (note.noteData > -1 && note.strumTime >= lastSongPos) {
+					if (note.mustPress) {
+						lilBf.animation.play(""+data, true);
+					} else {
+						lilOpp.animation.play(""+data, true);
+					}
+				}
+			}
+		});
 
 		if (FlxG.keys.justPressed.ENTER) {
 			lastSection = curSection;
@@ -771,6 +808,14 @@ class ChartingState extends MusicBeatState
 		} else {
 			rightIcon.setPosition(170, 5);
 			leftIcon.setPosition(9, 5);
+		}
+	}
+
+	override function beatHit() {
+		super.beatHit();
+		if (curBeat % 2 == 0) {
+			lilBf.animation.play("idle");
+			lilOpp.animation.play("idle");
 		}
 	}
 

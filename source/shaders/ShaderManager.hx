@@ -37,8 +37,6 @@ class ShaderManager {
 
 		snow.time.value = [0];
 
-        //////////////////////////////////////////////
-
         translatedShader = [
             "vhs" => new ShaderFilter(vhs),
 		    "glitch" => new ShaderFilter(glitch),

@@ -71,12 +71,7 @@ class PlayState extends MusicBeatState
 	public static var secondOpponent:Character;
 	public static var gf:Character;
 	public static var boyfriend:Boyfriend;
-
-	// hold sustains
-	var frozenCharacters:ObjectMap<Character, Bool> = new ObjectMap();
 	public var characters:Array<Character> = [boyfriend, dadOpponent, gf, secondOpponent];
-	public var animSuffix:String;
-	public var animCancelled:Bool = false;
 
 	public static var assetModifier:String = 'base';
 	public static var changeableSkin:String = 'default';
@@ -102,6 +97,7 @@ class PlayState extends MusicBeatState
 	private static var prevCamFollow:FlxObject;
 
 	public static var removeZoom:Bool = false;
+	public static var canBeat:Bool = false;
 	private var curSong:String = "";
 	private var gfSpeed:Int = 1;
 
@@ -566,25 +562,6 @@ class PlayState extends MusicBeatState
 		stageBuild.stageUpdateConstant(elapsed, boyfriend, gf, dadOpponent);
 
 		super.update(elapsed);
-		switch(focus) {
-			case DAD:
-				var char = dadOpponent;
-				if (frozenCharacters.get(char) && char.animation.curAnim != null) {
-					char.animation.curAnim.paused = true;
-				} else {
-					if (char.animation.curAnim != null) 
-						char.animation.curAnim.paused = false;
-				}
-			case BF:
-				var char = boyfriend;
-				if (frozenCharacters.get(char) && char.animation.curAnim != null) {
-					char.animation.curAnim.paused = true;
-				} else {
-					if (char.animation.curAnim != null) 
-						char.animation.curAnim.paused = false;
-				}
-			default:
-		}
 		FlxTweenPlayState.globalManager.update(elapsed);
 		timerManager.update(elapsed);
 
@@ -642,17 +619,9 @@ class PlayState extends MusicBeatState
 					{
 						songTime = (songTime + Conductor.songPosition) / 2;
 						Conductor.lastSongPos = Conductor.songPosition;
-						// Conductor.songPosition += FlxG.elapsed * 1000;
-						// trace('MISSED FRAME');
 					}
 				}
-
-				// Conductor.lastSongPos = FlxG.sound.music.time;
-				// song shit for testing lols
 			}
-
-			// boyfriend.playAnim('singLEFT', true);
-			// */
 
 			if (generatedMusic && PlayState.SONG.notes[Std.int(curStep / 16)] != null)
 			{
@@ -687,7 +656,7 @@ class PlayState extends MusicBeatState
 			// camera stuffs
 			if (removeZoom) {
 				FlxG.camera.zoom = FlxMath.lerp(defaultCamZoom + forceZoom[0], FlxG.camera.zoom, easeLerp);
-			}
+			} 
 
 			for (hud in allUIs)
 				hud.zoom = FlxMath.lerp(1 + forceZoom[1], hud.zoom, easeLerp);
@@ -1015,23 +984,6 @@ class PlayState extends MusicBeatState
 
 			if (!coolNote.isSustainNote)
 				destroyNote(characterStrums, coolNote);
-
-			/*if (coolNote.isSustainNote) {
-				if ((character.animation.exists(character.singAnims[coolNote.noteData] + animSuffix + '-loop') || character.animation.exists(character.singAnims[coolNote.noteData] + '-loop')) || StringTools.endsWith(character.getAnimName(), '-loop')) {
-					if (StringTools.endsWith(character.getAnimName(), '-loop')) {
-						animCancelled = true;
-						character.lastHit = Conductor.songPosition;
-					} else if (!animCancelled) {
-						animSuffix += '-loop';
-					}
-				}
-			} else frozenCharacters.set(character, true);
-		
-			if (coolNote.isSustainNote) {
-				coolNote.animation.finishCallback == function(name:String) {
-					frozenCharacters.set(character, false);
-				}
-			}*/
 		}
 	}
 
@@ -1579,6 +1531,12 @@ class PlayState extends MusicBeatState
 	override function beatHit() {
 		super.beatHit();
 
+		for (cams in [camGame, camHUD]) {
+			if (canBeat) {
+				cams.zoom += 0.025;
+			}
+		}
+		
 		eventHandler.onBeat(curBeat);
 
 		if (SONG.notes[Math.floor(curStep / 16)] != null)

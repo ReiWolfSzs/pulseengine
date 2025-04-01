@@ -53,6 +53,8 @@ class Stage extends FlxTypedGroup<FlxBasic> {
 			case 'limo':
 				var scaleX:Float = 1;
 				var scaleY:Float = 1;
+				game.canBeat = true; // camBeat on 
+				game.removeZoom = true;
 				game.defaultCamZoom = 0.2;
 
 				limoSky = new FlxSprite(0, 0).loadGraphic(Paths.image('backgrounds/' + curStage + '/limoSunset'));
@@ -136,12 +138,9 @@ class Stage extends FlxTypedGroup<FlxBasic> {
 
 	public function repositionPlayers(curStage, boyfriend:Character, dad:Character, gf:Character):Void {
 		switch (curStage) {
-			case 'escola':
-				dad.setPosition(1700, 1800);
-				boyfriend.setPosition(2700, 1950);
-			case 'hell':
-				dad.setPosition(540, 920);
-				boyfriend.setPosition(2080, 950);
+			case 'limo':
+				dad.setPosition(0, 0);
+				boyfriend.setPosition(1400, 260);
 			case "stage":
 				dad.setPosition(0, 0);
 				boyfriend.setPosition(0, 0);
