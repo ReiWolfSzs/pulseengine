@@ -51,12 +51,12 @@ class NoteSplash extends FlxSprite {
 				offset.set(30, 15);
 				trace("CustomSplash");*/
 			default:
-				frames = Paths.getSparrowAtlas(skin, "assets/collection");
+				frames = Paths.getSparrowAtlas("splashskins/default/" + skin);
 				for (i in 0...3) {
-					animation.addByPrefix("note1-" + i, "vanilla " + i, 24, false);
-					animation.addByPrefix("note2-" + i, "vanilla " + i, 24, false);
-					animation.addByPrefix("note0-" + i, "vanilla " + i, 24, false);
-					animation.addByPrefix("note3-" + i, "vanilla " + i, 24, false);
+					animation.addByPrefix("note1-" + i, "note impact " + i + " blue", 24, false);
+					animation.addByPrefix("note2-" + i, "note impact " + i + " green", 24, false);
+					animation.addByPrefix("note0-" + i, "note impact " + i + " purple", 24, false);
+					animation.addByPrefix("note3-" + i, "note impact " + i + " red", 24, false);
 				}
 				offset.set(60, 70);
 				//trace("defaultSplash");

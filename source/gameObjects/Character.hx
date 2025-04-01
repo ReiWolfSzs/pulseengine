@@ -16,6 +16,12 @@ import meta.state.PlayState;
 import openfl.utils.Assets as OpenFlAssets;
 import flxanimate.FlxAnimate;
 
+import flixel.text.FlxText;
+import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
+import flixel.FlxSprite;
+import flixel.FlxBasic;
+
 using StringTools;
 
 typedef CharacterData =
@@ -35,15 +41,12 @@ class Character extends FNFSprite
 	public var curCharacter:String = 'bf';
 
 	public var holdTimer:Float = 0;
-
 	public var characterData:CharacterData;
 	public var adjustPos:Bool = true;
 
 	public var direct:String = 'assets/collection';
 	public var lastHit:Float = Math.NEGATIVE_INFINITY;
 	public var singAnims = ["singLEFT", "singDOWN", "singUP", "singRIGHT"];
-	public var animateAtlas:FlxAnimate;
-	public var atlasPlayingAnim:String;
 
 	public function new(?isPlayer:Bool = false)
 	{
@@ -66,68 +69,6 @@ class Character extends FNFSprite
 		};
 
 		switch (curCharacter) {
-			case 'bun':
-				frames = Paths.getSparrowAtlas('DXHalloween/characters/bunfriend', direct);
-				animation.addByPrefix('idle', 'i', 24, false);
-				animation.addByPrefix('singUP', 'u', 24, false);
-				animation.addByPrefix('singLEFT', 'l', 24, false);
-				animation.addByPrefix('singRIGHT', 'r', 24, false);
-				animation.addByPrefix('singDOWN', 'd', 24, false);
-				playAnim('idle');
-				flipLeftRight();
-
-				flipX = true;
-				characterData.camOffsetX = 330;
-				characterData.camOffsetY = -40;
-			case 'tails':
-				frames = Paths.getSparrowAtlas('DXHalloween/characters/tails', direct);
-				animation.addByPrefix('idle', 'i', 24, false);
-				animation.addByPrefix('singUP', 'u', 24, false);
-				animation.addByPrefix('singLEFT', 'l', 24, false);
-				animation.addByPrefix('singRIGHT', 'r', 24, false);
-				animation.addByPrefix('singDOWN', 'd', 24, false);
-				animation.addByPrefix('animation', 'tdanim', 24, false);
-				playAnim('idle');
-
-				characterData.camOffsetX = 200;
-			case 'sonic':
-				frames = Paths.getSparrowAtlas('DXHalloween/characters/sonic', direct);
-				animation.addByPrefix('idle', 'i', 24, false);
-				animation.addByPrefix('animation', 's', 24, false);
-				playAnim('idle');
-			case 'bot':
-				frames = Paths.getSparrowAtlas('DXHalloween/characters/tailsbot', direct);
-				animation.addByPrefix('idle', 'i', 24, false);
-				animation.addByPrefix('singUP', 'u', 24, false);
-				animation.addByPrefix('singLEFT', 'l', 24, false);
-				animation.addByPrefix('singRIGHT', 'r', 24, false);
-				animation.addByPrefix('singDOWN', 'd', 24, false);
-				playAnim('idle');
-			case 'bf-school':
-				frames = Paths.getSparrowAtlas('school/characters/bf', direct);
-				animation.addByPrefix('idle', 'idle', 24, false);
-				animation.addByPrefix('singUP', 'up', 24, false);
-				animation.addByPrefix('singLEFT', 'left', 24, false);
-				animation.addByPrefix('singRIGHT', 'right', 24, false);
-				animation.addByPrefix('singDOWN', 'down', 24, false);
-				animation.addByPrefix('singUPmiss', 'miss up', 24, false);
-				animation.addByPrefix('singLEFTmiss', 'miss left', 24, false);
-				animation.addByPrefix('singRIGHTmiss', 'miss right', 24, false);
-				animation.addByPrefix('singDOWNmiss', 'miss down', 24, false);
-				playAnim('idle');
-
-				flipX = true;
-				characterData.offsetY = -70;
-			case 'abby':
-				frames = Paths.getSparrowAtlas('school/characters/abby', direct);
-				animation.addByPrefix('idle', 'idle', 24, false);
-				animation.addByPrefix('singUP', 'up', 24, false);
-				animation.addByPrefix('singLEFT', 'left', 24, false);
-				animation.addByPrefix('singRIGHT', 'right', 24, false);
-				animation.addByPrefix('singDOWN', 'down', 24, false);
-				playAnim('idle');
-
-				characterData.offsetY = -70;
 			case 'bf':
 				frames = Paths.getSparrowAtlas('characters/BOYFRIEND');
 				animation.addByPrefix('idle', 'BF idle dance', 24, false);
@@ -141,6 +82,22 @@ class Character extends FNFSprite
 				animation.addByPrefix('singDOWNmiss', 'BF NOTE DOWN MISS', 24, false);
 				animation.addByPrefix('hey', 'BF HEY', 24, false);
 				animation.addByPrefix('scared', 'BF idle shaking', 24);
+				playAnim('idle');
+
+				flipX = true;
+				characterData.offsetY = -70;
+			case 'bf-haired':
+				frames = Paths.getSparrowAtlas('characters/BOYFRIEND_mom');
+				animation.addByPrefix('idle', 'BF idle dance', 24, true);
+				animation.addByPrefix('singUP', 'BF NOTE UP0', 24, true);
+				animation.addByPrefix('singLEFT', 'BF NOTE LEFT0', 24, true);
+				animation.addByPrefix('singRIGHT', 'BF NOTE RIGHT0', 24, true);
+				animation.addByPrefix('singDOWN', 'BF NOTE DOWN0', 24, true);
+				animation.addByPrefix('singUPmiss', 'BF NOTE UP MISS', 24, true);
+				animation.addByPrefix('singLEFTmiss', 'BF NOTE LEFT MISS', 24, true);
+				animation.addByPrefix('singRIGHTmiss', 'BF NOTE RIGHT MISS', 24, true);
+				animation.addByPrefix('singDOWNmiss', 'BF NOTE DOWN MISS', 24, true);
+				animation.addByPrefix('hey', 'BF HEY', 24, true);
 				playAnim('idle');
 
 				flipX = true;
@@ -161,6 +118,16 @@ class Character extends FNFSprite
 				animation.addByIndices('hairFall', "GF Dancing Beat Hair Landing", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "", 24, false);
 				animation.addByPrefix('scared', 'GF FEAR', 24);
 				playAnim('danceRight');
+
+				characterData.offsetY = -70;
+			case 'mom':
+				frames = Paths.getSparrowAtlas('characters/mom');
+				animation.addByPrefix('idle', 'idle', 24, true);
+				animation.addByPrefix('singUP', 'up', 24, true);
+				animation.addByPrefix('singLEFT', 'left', 24, true);
+				animation.addByPrefix('singRIGHT', 'right', 24, true);
+				animation.addByPrefix('singDOWN', 'down', 24, true);
+				playAnim('idle');
 
 				characterData.offsetY = -70;
 			default:
@@ -200,7 +167,7 @@ class Character extends FNFSprite
 
 		if (adjustPos) {
 			x += characterData.offsetX;
-			trace('character ${curCharacter} scale ${scale.y}');
+			//trace('character ${curCharacter} scale ${scale.y}');
 			y += (characterData.offsetY - (frameHeight * scale.y));
 		}
 
@@ -212,12 +179,8 @@ class Character extends FNFSprite
 
 	public inline function getAnimName() {
 		var name = null;
-		if (animateAtlas != null) {
-			name = atlasPlayingAnim;
-		} else {
-			if (animation.curAnim != null)
-				name = animation.curAnim.name;
-		}
+		if (animation.curAnim != null) name = animation.curAnim.name;
+
 		return name;
 	}
 
@@ -277,8 +240,6 @@ class Character extends FNFSprite
 		}
 
 		super.update(elapsed);
-		if (animateAtlas != null)
-			animateAtlas.update(elapsed);
 	}
 
 	private var danced:Bool = false;
@@ -294,27 +255,17 @@ class Character extends FNFSprite
 			switch (curCharSimplified)
 			{
 				case 'gf':
-					if ((!animation.curAnim.name.startsWith('hair')) && (!animation.curAnim.name.startsWith('sad')))
-					{
+					if ((!animation.curAnim.name.startsWith('hair')) && (!animation.curAnim.name.startsWith('sad'))) {
 						danced = !danced;
-
-						if (danced)
-							playAnim('danceRight', forced);
-						else
-							playAnim('danceLeft', forced);
+						if (danced) playAnim('danceRight', forced);
+						else playAnim('danceLeft', forced);
 					}
 				default:
-					// Left/right dancing, think Skid & Pump
-					if (animation.getByName('danceLeft') != null && animation.getByName('danceRight') != null)
-					{
+					if (animation.getByName('danceLeft') != null && animation.getByName('danceRight') != null) {
 						danced = !danced;
-						if (danced)
-							playAnim('danceRight', forced);
-						else
-							playAnim('danceLeft', forced);
-					}
-					else
-						playAnim('idle', forced);
+						if (danced) playAnim('danceRight', forced);
+						else playAnim('danceLeft', forced);
+					} else playAnim('idle', forced);
 			}
 		}
 	}

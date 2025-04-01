@@ -33,6 +33,7 @@ class MainMenuState extends MusicBeatState
 	var canSnap:Array<Float> = [];
 
 	var selection:Int = 0;
+	//var songList:Array = ['satin-panties'];
 
 	// the create 'state'
 	override function create()
@@ -131,6 +132,10 @@ class MainMenuState extends MusicBeatState
 		var down_p = controls.UI_DOWN_P;
 		var controlArray:Array<Bool> = [up, down, up_p, down_p];
 
+		if (FlxG.keys.justPressed.SEVEN) {
+			FlxG.switchState(new meta.state.charting.ChartingState());
+		}
+
 		if ((controlArray.contains(true)) && (!selectedSomethin)) {
 			for (i in 0...controlArray.length) {
 				// here we check which keys are pressed
@@ -195,7 +200,7 @@ class MainMenuState extends MusicBeatState
 						{
 							case 'story mode':
 								FlxG.switchState(new FreeplayState());
-							//Main.switchState(this, new CachingState(songList[selection]));
+								//Flx.switchState(new CachingState(songList[selection]));
 							case 'freeplay':
 								FlxG.switchState(new FreeplayState());
 							case 'options':

@@ -16,7 +16,7 @@ import meta.state.*;
 import meta.state.menus.*;
 import sys.thread.Mutex;
 import sys.thread.Thread;
-import flixel.system.FlxSound;
+import flixel.sound.FlxSound;
 
 class PauseSubState extends MusicBeatSubState
 {

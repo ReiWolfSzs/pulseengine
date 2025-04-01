@@ -16,7 +16,7 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.group.FlxGroup;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
-import flixel.system.FlxSound;
+import flixel.sound.FlxSound;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.ui.FlxSpriteButton;
@@ -69,7 +69,7 @@ class ChartingState extends MusicBeatState
 	var bpmTxt:FlxText;
 
 	var strumLine:FlxSprite;
-	var curSong:String = 'Dadbattle';
+	var curSong:String = '';
 	var amountSteps:Int = 0;
 	var bullshitUI:FlxGroup;
 
@@ -80,6 +80,7 @@ class ChartingState extends MusicBeatState
 	var dummyArrow:FlxSprite;
 
 	var curRenderedNotes:FlxTypedGroup<Note>;
+	var curRenderedNoteTypes:FlxTypedGroup<FlxText>;
 	var curRenderedSustains:FlxTypedGroup<FlxSprite>;
 
 	var gridBG:FlxSprite;
@@ -104,6 +105,12 @@ class ChartingState extends MusicBeatState
 	var playTicksBf:FlxUICheckBox = null;
 	var playTicksDad:FlxUICheckBox = null;
 
+	var noteTypes:Array<String> = [
+		"Normal",
+		"Second Opponent",
+		"Both Opponent"
+	];
+
 	override function create() {
 		curSection = lastSection;
 
@@ -119,19 +126,20 @@ class ChartingState extends MusicBeatState
 		add(gridBlackLine);
 
 		curRenderedNotes = new FlxTypedGroup<Note>();
+		curRenderedNoteTypes = new FlxTypedGroup<FlxText>();
 		curRenderedSustains = new FlxTypedGroup<FlxSprite>();
 
 		if (PlayState.SONG != null) {
 			_song = PlayState.SONG;
 		} else {
 			_song = {
-				song: 'Test',
+				song: 'satin-panties',
 				notes: [],
 				bpm: 150,
 				needsVoices: true,
 				player1: 'bf',
 				player2: 'bf',
-				player3: 'bf',
+				player3: 'none',
 				gfVersion: 'gf',
 				speed: 1,
 				validScore: false,
@@ -180,8 +188,11 @@ class ChartingState extends MusicBeatState
 
 		addSongUI();
 		addSectionUI();
+		updateSectionUI();
 		addNoteUI();
 		updateWaveform();
+
+		FlxG.sound.pause();
 
 		super.create();
 
@@ -189,6 +200,7 @@ class ChartingState extends MusicBeatState
 		add(waveformSprite);
 
 		add(curRenderedNotes);
+		add(curRenderedNoteTypes);
 		add(curRenderedSustains);
 
 		leftIcon = new HealthIcon('bf');
@@ -270,8 +282,11 @@ class ChartingState extends MusicBeatState
 		});
 		player2DropDown.selectedLabel = _song.player2;
 
-		var player3DropDown = new FlxUIDropDownMenu(140, 140, FlxUIDropDownMenu.makeStrIdLabelArray(characters, true), function(character:String) {
-			_song.player3 = characters[Std.parseInt(character)];
+		var charactersWithNone:Array<String> = characters.copy();
+		charactersWithNone.insert(0, "none");
+
+		var player3DropDown = new FlxUIDropDownMenu(140, 140, FlxUIDropDownMenu.makeStrIdLabelArray(charactersWithNone, true), function(character:String) {
+			_song.player3 = charactersWithNone[Std.parseInt(character)];
 		});
 		player3DropDown.selectedLabel = _song.player3;
 
@@ -314,6 +329,7 @@ class ChartingState extends MusicBeatState
 
 	var stepperLength:FlxUINumericStepper;
 	var check_mustHitSection:FlxUICheckBox;
+	var check_mustSecondOpponentSection:FlxUICheckBox;
 	var check_changeBPM:FlxUICheckBox;
 	var stepperSectionBPM:FlxUINumericStepper;
 	var check_altAnim:FlxUICheckBox;
@@ -352,6 +368,9 @@ class ChartingState extends MusicBeatState
 		check_mustHitSection.checked = true;
 		// _song.needsVoices = check_mustHit.checked;
 
+		check_mustSecondOpponentSection = new FlxUICheckBox(150, 30, null, null, "Must hit second opponent", 100);
+		check_mustSecondOpponentSection.name = 'check_mustSecondOpponent';
+
 		check_altAnim = new FlxUICheckBox(10, 400, null, null, "Alt Animation", 100);
 		check_altAnim.name = 'check_altAnim';
 
@@ -362,6 +381,7 @@ class ChartingState extends MusicBeatState
 		tab_group_section.add(stepperSectionBPM);
 		tab_group_section.add(stepperCopy);
 		tab_group_section.add(check_mustHitSection);
+		tab_group_section.add(check_mustSecondOpponentSection);
 		tab_group_section.add(check_altAnim);
 		tab_group_section.add(check_changeBPM);
 		tab_group_section.add(copyButton);
@@ -372,11 +392,20 @@ class ChartingState extends MusicBeatState
 	}
 
 	var stepperSusLength:FlxUINumericStepper;
-	var stepperType:FlxUINumericStepper;
+	var dropDownType:FlxUIDropDownMenu;
+	var disableAutoScrolling:FlxUICheckBox;
 
 	function addNoteUI():Void {
 		var tab_group_note = new FlxUI(null, UI_box);
 		tab_group_note.name = 'Note';
+
+		disableAutoScrolling = new FlxUICheckBox(10, 320, null, null, "Disable Autoscroll (Not Recommended)", 120,
+			function() {
+				FlxG.save.data.chart_noAutoScroll = disableAutoScrolling.checked;
+			}
+		);
+		if (FlxG.save.data.chart_noAutoScroll == null) FlxG.save.data.chart_noAutoScroll = false;
+		disableAutoScrolling.checked = FlxG.save.data.chart_noAutoScroll;
 
 		stepperSusLength = new FlxUINumericStepper(10, 10, Conductor.stepCrochet / 2, 0, 0, Conductor.stepCrochet * 16);
 		stepperSusLength.value = 0;
@@ -387,13 +416,21 @@ class ChartingState extends MusicBeatState
 		tab_group_note.add(stepperSusLength);
 		tab_group_note.add(applyLength);
 
+		/*
 		// note types
 		stepperType = new FlxUINumericStepper(10, 30, Conductor.stepCrochet / 125, 0, 0, (Conductor.stepCrochet / 125) + 10); // 10 is placeholder
 		// I have no idea what i'm doing lmfao
 		stepperType.value = 0;
 		stepperType.name = 'note_type';
+		*/
 
-		tab_group_note.add(stepperType);
+		dropDownType = new FlxUIDropDownMenu(10, 30, FlxUIDropDownMenu.makeStrIdLabelArray(noteTypes, true), function(type:String) {
+			curNoteType = Std.parseInt(type);
+		});
+
+		//tab_group_note.add(stepperType);
+		tab_group_note.add(dropDownType);
+		tab_group_note.add(disableAutoScrolling);
 
 		UI_box.addGroup(tab_group_note);
 		// I'm genuinely tempted to go around and remove every instance of the word "sus" it is genuinely killing me inside
@@ -448,6 +485,8 @@ class ChartingState extends MusicBeatState
 			switch (label) {
 				case 'Must hit section':
 					_song.notes[curSection].mustHitSection = check.checked;
+				case 'Must hit second opponent':
+					_song.notes[curSection].mustSecondOpponentSection = check.checked;
 				case 'Change BPM':
 					_song.notes[curSection].changeBPM = check.checked;
 					FlxG.log.add('changed bpm shit');
@@ -515,6 +554,17 @@ class ChartingState extends MusicBeatState
 		var playedSound:Array<Bool> = [];
 		for (i in 0...8) {
 			playedSound.push(false);
+		}
+
+		if(!disableAutoScrolling.checked) {
+			if (Math.ceil(strumLine.y) >= gridBG.height + 50) {
+				if (_song.notes[curSection + 1] == null) {
+					addSection();
+				}
+				changeSection(curSection + 1, false);
+			} else if(strumLine.y < -10) {
+				changeSection(curSection - 1, false);
+			}
 		}
 
 		curRenderedNotes.forEachAlive(function(note:Note) {
@@ -682,9 +732,9 @@ class ChartingState extends MusicBeatState
 			changeSection(curSection - shiftThing);
 		}
 
-		bpmTxt.text = calculateTime(FlxMath.roundDecimal(FlxG.sound.music.time, 2))
+		bpmTxt.text = calculateTime(FlxMath.roundDecimal(songMusic.time, 2))
 			+ " / "
-			+ calculateTime(FlxG.sound.music.length)
+			+ calculateTime(songMusic.length)
 			+ "\nSection: "
 			+ curSection
 			+ "\nBeat: "
@@ -997,6 +1047,7 @@ class ChartingState extends MusicBeatState
 
 		stepperLength.value = sec.lengthInSteps;
 		check_mustHitSection.checked = sec.mustHitSection;
+		check_mustSecondOpponentSection.checked = sec.mustSecondOpponentSection;
 		check_altAnim.checked = sec.altAnim;
 		check_changeBPM.checked = sec.changeBPM;
 		stepperSectionBPM.value = sec.bpm;
@@ -1023,10 +1074,15 @@ class ChartingState extends MusicBeatState
 
 	function updateGrid():Void {
 		curRenderedNotes.clear();
+		curRenderedNoteTypes.clear();
 		curRenderedSustains.clear();
 
 		while (curRenderedNotes.members.length > 0) {
 			curRenderedNotes.remove(curRenderedNotes.members[0], true);
+		}
+
+		while (curRenderedNoteTypes.members.length > 0) {
+			curRenderedNoteTypes.remove(curRenderedNoteTypes.members[0], true);
 		}
 
 		while (curRenderedSustains.members.length > 0) {
@@ -1073,6 +1129,15 @@ class ChartingState extends MusicBeatState
 
 			curRenderedNotes.add(note);
 
+			if (daNoteType != 0) {
+				var noteTypeTxt:FlxText = new FlxText(0, 0, 0, ""+daNoteType);
+				noteTypeTxt.setFormat(null, 14, FlxColor.WHITE, "center", OUTLINE, FlxColor.BLACK);
+				noteTypeTxt.x = note.x + (GRID_SIZE / 2) - (noteTypeTxt.width / 2);
+				noteTypeTxt.y = note.y + (GRID_SIZE / 2) - (noteTypeTxt.height / 2);
+				curRenderedNoteTypes.add(noteTypeTxt);
+				trace('note type: ' + daNoteType);
+			}
+
 			if (daSus > 0) {
 				var sustainVis:FlxSprite = new FlxSprite(note.x + (GRID_SIZE / 2) - 4,
 					note.y + GRID_SIZE).makeGraphic(8, Math.floor(FlxMath.remapToRange(daSus, 0, Conductor.stepCrochet * 16, 0, gridBG.height)));
@@ -1087,6 +1152,7 @@ class ChartingState extends MusicBeatState
 			bpm: _song.bpm,
 			changeBPM: false,
 			mustHitSection: true,
+			mustSecondOpponentSection: false,
 			sectionNotes: [],
 			gfSection: false,
 			typeOfSection: 0,

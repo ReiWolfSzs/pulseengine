@@ -14,7 +14,7 @@ import flixel.input.keyboard.FlxKey;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-import flixel.system.FlxSound;
+import flixel.sound.FlxSound;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
@@ -262,7 +262,8 @@ class PlayState extends MusicBeatState
 		gf.scrollFactor.set(1, 1);
 
 		dadOpponent = new Character().setCharacter(50, 850, SONG.player2);
-		secondOpponent = new Character().setCharacter(-50, 850, SONG.player3);
+		if (SONG.player3 != "none")
+			secondOpponent = new Character().setCharacter(-50, 850, SONG.player3);
 		boyfriend = new Boyfriend();
 		boyfriend.setCharacter(750, 850, SONG.player1);
 		// if you want to change characters later use setCharacter() instead of new or it will break
@@ -283,14 +284,16 @@ class PlayState extends MusicBeatState
 		add(gf);
 
 		add(dadOpponent);
-		add(secondOpponent);
+		if (SONG.player3 != "none")
+			add(secondOpponent);
 		add(boyfriend);
 
 		add(stageBuild.foreground);
 
 		// force them to dance
 		dadOpponent.dance();
-		secondOpponent.dance();
+		if (SONG.player3 != "none")
+			secondOpponent.dance();
 		gf.dance();
 		boyfriend.dance();
 
@@ -887,7 +890,7 @@ class PlayState extends MusicBeatState
 									note.tooLate = true;
 
 								vocals.volume = 0;
-								missNoteCheck((Init.trueSettings.get('Ghost Tapping')) ? true : false, daNote.noteData, boyfriend, true);
+								missNoteCheck((Init.trueSettings.get('Ghost Tapping')) ? true : true, daNote.noteData, boyfriend, true);
 								// ambiguous name
 								Timings.updateAccuracy(0);
 							}
@@ -907,7 +910,7 @@ class PlayState extends MusicBeatState
 										}
 										if (!breakFromLate)
 										{
-											missNoteCheck((Init.trueSettings.get('Ghost Tapping')) ? true : false, daNote.noteData, boyfriend, true);
+											missNoteCheck((Init.trueSettings.get('Ghost Tapping')) ? true : true, daNote.noteData, boyfriend, true);
 											for (note in parentNote.childrenNotes)
 												note.tooLate = true;
 										}
@@ -1565,9 +1568,12 @@ class PlayState extends MusicBeatState
 			&& (curBeat % 2 == 0 || dadOpponent.characterData.quickDancer))
 			dadOpponent.dance();
 
-		if ((secondOpponent.animation.curAnim.name.startsWith("idle") || secondOpponent.animation.curAnim.name.startsWith("dance"))
+		if (SONG.player3 != "none") 
+		{
+			if ((secondOpponent.animation.curAnim.name.startsWith("idle") || secondOpponent.animation.curAnim.name.startsWith("dance"))
 			&& (curBeat % 2 == 0 || secondOpponent.characterData.quickDancer))
 			secondOpponent.dance();
+		}
 	}
 
 	override function beatHit() {

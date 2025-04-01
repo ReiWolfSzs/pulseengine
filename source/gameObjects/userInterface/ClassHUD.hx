@@ -47,11 +47,17 @@ class ClassHUD extends FlxTypedGroup<FlxBasic>
 	private var stupidHealth:Float = 0;
 
 	private var timingsMap:Map<String, FlxText> = [];
+
+	/**
+	 * Construtor da classe `ClassHUD`.
+	 * Inicializa os elementos da interface, como barra de saúde, ícones de saúde, marcador de autoplay e contador de acertos.
+	 */
 	public function new() {
 		// call the initializations and stuffs
 		super();
 
-		var barY = FlxG.height * 0.875;
+		// Configura a barra de saúde
+		var barY = FlxG.height * 0.85;
 		if (Init.trueSettings.get('Downscroll')) barY = 64;
 
 		healthBarBG = new FlxSprite(0, barY).loadGraphic(Paths.image(ForeverTools.returnSkinAsset('healthBar', PlayState.assetModifier, PlayState.changeableSkin, 'UI')));
@@ -64,17 +70,19 @@ class ClassHUD extends FlxTypedGroup<FlxBasic>
 		healthBar.scale.set(1.5, 1);
 		add(healthBar);
 
+		// Configura os ícones de saúde
 		iconP1 = new HealthIcon(PlayState.SONG.player1, true);
 		iconP1.y = healthBar.y - 100;
 		add(iconP1);
 
 		iconP2 = new HealthIcon(PlayState.SONG.player2, false);
-		iconP2.y = healthBar.y - 100;
+		iconP2.y = healthBar.y - 90;
 		add(iconP2);
 
+		// Configura a barra de pontuação
 		scoreBar = new FlxText(690, 653, 0, scoreDisplay);
-		scoreBar.setFormat(Paths.font('vcr.ttf'), 18, FlxColor.WHITE);
-		scoreBar.setBorderStyle(OUTLINE, FlxColor.BLACK, 1.5);
+		scoreBar.setFormat(Paths.font('vcr.ttf'), 16, FlxColor.WHITE);
+		scoreBar.setBorderStyle(OUTLINE, FlxColor.BLACK, 1.2);
 		scoreBar.fieldWidth = 0;
 		updateScoreText();
 		scoreBar.antialiasing = true;
@@ -82,7 +90,7 @@ class ClassHUD extends FlxTypedGroup<FlxBasic>
 		if (Init.trueSettings.get('Downscroll'))
 			scoreBar.setPosition(490, 29);
 
-		// counter
+		 // Configura o contador de acertos
 		if (Init.trueSettings.get('Counter') != 'None')
 		{
 			var judgementNameArray:Array<String> = [];
@@ -106,13 +114,14 @@ class ClassHUD extends FlxTypedGroup<FlxBasic>
 		}
 		updateScoreText();
 
+		// Configura o marcador de autoplay
 		autoplayMark = new FlxText(-5, (Init.trueSettings.get('Downscroll') ? -60 : 60), FlxG.width - 800, '[AUTOPLAY]', 32);
 		autoplayMark.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
 		autoplayMark.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
 		autoplayMark.screenCenter(X);
 		autoplayMark.visible = PlayState.boyfriendStrums.autoplay;
 
-		// repositioning for it to not be covered by the receptors
+		// Reposiciona o marcador para não ser coberto pelos receptores
 		if (Init.trueSettings.get('Centered Notefield'))
 		{
 			if (Init.trueSettings.get('Downscroll'))
@@ -126,21 +135,27 @@ class ClassHUD extends FlxTypedGroup<FlxBasic>
 
 	var counterTextSize:Int = 18;
 
+	/**
+	 * Função auxiliar para ordenar os julgamentos no contador.
+	 * @param Obj1 Nome do primeiro julgamento.
+	 * @param Obj2 Nome do segundo julgamento.
+	 * @return Resultado da comparação.
+	 */
 	function sortByShit(Obj1:String, Obj2:String):Int
 		return FlxSort.byValues(FlxSort.ASCENDING, Timings.judgementsMap.get(Obj1)[0], Timings.judgementsMap.get(Obj2)[0]);
 
 	var left = (Init.trueSettings.get('Counter') == 'Left');
 
+	/**
+	 * Atualiza os elementos da interface a cada quadro.
+	 * Inclui a barra de saúde, ícones de saúde e marcador de autoplay.
+	 * @param elapsed Tempo decorrido desde o último quadro.
+	 */
 	override public function update(elapsed:Float) {
 		// pain, this is like the 7th attempt
 		healthBar.percent = (PlayState.health * 50);
 
 		var iconLerp = 1 - Main.framerateAdjust(0.15);
-		//iconP1.setGraphicSize(Std.int(FlxMath.lerp(iconP1.initialWidth, iconP1.width, iconLerp)));
-		//iconP2.setGraphicSize(Std.int(FlxMath.lerp(iconP2.initialWidth, iconP2.width, iconLerp)));
-
-		iconP1.scale.set(FlxMath.lerp(1, iconP1.scale.x, iconLerp), FlxMath.lerp(1, iconP1.scale.y, iconLerp));
-		iconP2.scale.set(FlxMath.lerp(1, iconP2.scale.x, iconLerp), FlxMath.lerp(1, iconP2.scale.y, iconLerp));
 
 		iconP1.updateHitbox();
 		iconP2.updateHitbox();
@@ -161,12 +176,17 @@ class ClassHUD extends FlxTypedGroup<FlxBasic>
 	}
 
 	private final divider:String = " • ";
+
+	/**
+	 * Atualiza o texto da pontuação e o contador de acertos.
+	 * Também sincroniza os dados com o estado de jogo.
+	 */
 	public function updateScoreText()
 	{
 		var comboDisplay:String = (Timings.comboDisplay != null && Timings.comboDisplay != '' ? ' [${Timings.comboDisplay}]' : '');
 		var gliderTxt = PlayState.songScore;
 
-		scoreBar.text = "" + FlxStringUtil.formatMoney(gliderTxt, false, true);
+		scoreBar.text = "Score: " + FlxStringUtil.formatMoney(gliderTxt, false, true);
 		scoreBar.x = Math.floor((FlxG.width / 2) - (scoreBar.width / 2));
 
 		// update counter
@@ -182,6 +202,10 @@ class ClassHUD extends FlxTypedGroup<FlxBasic>
 		PlayState.updateRPC(false);
 	}
 
+	/**
+	 * Lida com eventos de batida (beat) na música.
+	 * Atualiza os ícones de saúde para refletir o impacto da batida.
+	 */
 	public function beatHit()
 	{
 		iconP1.setGraphicSize(Std.int(iconP1.width + 30));

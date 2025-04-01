@@ -32,55 +32,52 @@ class Stage extends FlxTypedGroup<FlxBasic> {
 	public var foreground:FlxTypedGroup<FlxSprite> = new FlxTypedGroup<FlxSprite>();
 
 	public var splashSkin:String = "noteSplashes";
-	public var direct:String = "assets/collection"; // please make a name music in folder and init write... Thank You ;p
 
-	var moonSky:FlxSprite;
-	var moonHills:FlxSprite;
-	var moonFloor:FlxSprite;
-	var moonFore:FlxSprite;
-
-	var acriBG:FlxSprite;
-	var acriCrowd:FlxSprite;
-	var acriBoombox:FlxSprite;
+	var limoSky:FlxSprite;
+	var limoStar:FlxSprite;
+	var limoCar1:FlxSprite;
+	var limoCar2:FlxSprite;
 	public function new(curStage) {
 		super();
 		this.curStage = curStage;
 
 		switch (CoolUtil.spaceToDash(PlayState.SONG.song.toLowerCase())) {
-			case "moonlight":
-				curStage = 'hell';
-			case "acrimony":
-				curStage = 'escola';
+			case "satin-panties":
+				curStage = 'limo';
 			default:
 				curStage = 'stage';
 		}
 
 		game.curStage = curStage;
 		switch (curStage) {
-			case 'escola':
-				game.defaultCamZoom = 0.6;
+			case 'limo':
+				var scaleX:Float = 1;
+				var scaleY:Float = 1;
+				game.defaultCamZoom = 0.2;
 
-				acriBG = new FlxSprite(0, 0).loadGraphic(Paths.image('school/bg/bg', direct));
-				acriBG.scale.set(0.5, 0.5);
-				background.add(acriBG);
-			case 'hell':
-				game.defaultCamZoom = 0.5;
+				limoSky = new FlxSprite(0, 0).loadGraphic(Paths.image('backgrounds/' + curStage + '/limoSunset'));
+				background.add(limoSky);
 
-				moonSky = new FlxSprite(0, 0).loadGraphic(Paths.image('DXHalloween/bg/sky', direct));
-				moonSky.scale.set(1.2, 1.2);
-				background.add(moonSky);
-				
-				moonHills = new FlxSprite(0, 0).loadGraphic(Paths.image('DXHalloween/bg/hills', direct));
-				moonHills.scale.set(1.2, 1.2);
-				background.add(moonHills);
-				
-				moonFloor = new FlxSprite(0, 0).loadGraphic(Paths.image('DXHalloween/bg/ground', direct));
-				moonFloor.scale.set(1.2, 1.2);
-				background.add(moonFloor);
+				limoStar = new FlxSprite(0, 0);
+				limoStar.frames = Paths.getSparrowAtlas('backgrounds/' + curStage + '/shooting star');
+				limoStar.animation.addByPrefix('idle', 'shooting star', 24);
+				limoStar.animation.play('idle');
+				limoStar.antialiasing = true;
+				background.add(limoCar1);
 
-				moonFore = new FlxSprite(0, -30).loadGraphic(Paths.image('DXHalloween/bg/softlight', direct));
-				moonFore.scale.set(1.2, 1.2);
-				foreground.add(moonFore);
+				limoCar1 = new FlxSprite(0, 550);
+				limoCar1.frames = Paths.getSparrowAtlas('backgrounds/' + curStage + '/bglimo');
+				limoCar1.animation.addByPrefix('idle', 'background limo blue', 24);
+				limoCar1.animation.play('idle');
+				limoCar1.antialiasing = true;
+				background.add(limoCar1);
+
+				limoCar2 = new FlxSprite(120, 600);
+				limoCar2.frames = Paths.getSparrowAtlas('backgrounds/' + curStage + '/limoDrive');
+				limoCar2.animation.addByPrefix('idle', 'Limo stage', 24);
+				limoCar2.animation.play('idle');
+				limoCar2.antialiasing = true;
+				background.add(limoCar2);
 			default:
 				PlayState.defaultCamZoom = 0.9;
 				curStage = 'stage';

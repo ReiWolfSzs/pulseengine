@@ -200,6 +200,13 @@ class FreeplayState extends MusicBeatState
 		if (Math.abs(lerpScore - intendedScore) <= 10)
 			lerpScore = intendedScore;
 
+		if (FlxG.keys.justPressed.ESCAPE) {
+			if (FlxG.sound.music != null)
+				FlxG.sound.music.stop();
+
+			FlxG.switchState(new MainMenuState());
+		}
+
 		var upP = controls.UI_UP_P;
 		var downP = controls.UI_DOWN_P;
 		var accepted = controls.ACCEPT;
@@ -282,7 +289,7 @@ class FreeplayState extends MusicBeatState
 	{
 		FlxG.sound.play(Paths.sound('system/scroll'), 0.4);
 
-		curSelected = flixel.math.FlxMath.wrap(curSelected + change, 0, songs.length - 1);
+		curSelected = FlxMath.wrap(curSelected + change, 0, songs.length - 1);
 		intendedScore = Highscore.getScore(songs[curSelected].songName, curDifficulty);
 		
 		mainColor = songs[curSelected].songColor;

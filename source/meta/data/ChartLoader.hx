@@ -32,10 +32,15 @@ class ChartLoader {
 				// define the note's animation (in accordance to the original game)!
 				var daNoteAlt:Float = 0;
 
-				// very stupid but I'm lazy
-				if (songNotes.length > 2)
-					daNoteAlt = songNotes[3];
+				var daNoteType:Int = 0;
+				if (songNotes.length > 2) {
+					daNoteType = songNotes[3];
+				}
 
+				// very stupid but I'm lazy
+				/*if (songNotes.length > 2)
+					daNoteAlt = songNotes[3];
+				*/
 				// check the base section
 				var gottaHitNote:Bool = section.mustHitSection;
 
@@ -51,7 +56,7 @@ class ChartLoader {
 					oldNote = null;
 
 				// create the new note
-				var swagNote:Note = ForeverAssets.generateArrow(PlayState.assetModifier, daStrumTime, daNoteData, 0, daNoteAlt);
+				var swagNote:Note = ForeverAssets.generateArrow(PlayState.assetModifier, daStrumTime, daNoteData, daNoteType, daNoteAlt);
 				// set note speed
 				swagNote.noteSpeed = songData.speed;
 
@@ -65,7 +70,7 @@ class ChartLoader {
 				for (susNote in 0...Math.floor(susLength)) {
 					oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
 					var sustainNote:Note = ForeverAssets.generateArrow(PlayState.assetModifier,
-						daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, 0, daNoteAlt, true, oldNote);
+						daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, daNoteType, daNoteAlt, true, oldNote);
 					sustainNote.scrollFactor.set();
 
 					unspawnNotes.push(sustainNote);

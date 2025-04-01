@@ -23,7 +23,7 @@ class Note extends FNFSprite
 	public var mustPress:Bool = false;
 	public var noteData:Int = 0;
 	public var noteAlt:Float = 0;
-	public var noteType:Float = 0;
+	public var noteType:Int = 0;
 	public var noteString:String = "";
 
 	public var canBeHit:Bool = false;
@@ -52,7 +52,7 @@ class Note extends FNFSprite
 	// it has come to this.
 	public var endHoldOffset:Float = Math.NEGATIVE_INFINITY;
 
-	public function new(strumTime:Float, noteData:Int, noteAlt:Float, ?prevNote:Note, ?sustainNote:Bool = false)
+	public function new(strumTime:Float, noteData:Int, noteType:Int, noteAlt:Float, ?prevNote:Note, ?sustainNote:Bool = false)
 	{
 		super(x, y);
 
@@ -67,6 +67,7 @@ class Note extends FNFSprite
 
 		this.strumTime = strumTime;
 		this.noteData = noteData;
+		this.noteType = noteType;
 		this.noteAlt = noteAlt;
 
 		// determine parent note
@@ -106,9 +107,7 @@ class Note extends FNFSprite
 	**/
 	public static function returnDefaultNote(assetModifier, strumTime, noteData, noteType, noteAlt, ?isSustainNote:Bool = false, ?prevNote:Note = null):Note
 	{
-		var newNote:Note = new Note(strumTime, noteData, noteAlt, prevNote, isSustainNote);
-
-		newNote.noteType = noteType;
+		var newNote:Note = new Note(strumTime, noteData, noteType, noteAlt, prevNote, isSustainNote);
 
 		// frames originally go here
 		switch (assetModifier)
@@ -183,9 +182,7 @@ class Note extends FNFSprite
 
 	public static function returnQuantNote(assetModifier, strumTime, noteData, noteType, noteAlt, ?isSustainNote:Bool = false, ?prevNote:Note = null):Note
 	{
-		var newNote:Note = new Note(strumTime, noteData, noteAlt, prevNote, isSustainNote);
-
-		newNote.noteType = noteType;
+		var newNote:Note = new Note(strumTime, noteData, noteType, noteAlt, prevNote, isSustainNote);
 
 		// actually determine the quant of the note
 		if (newNote.noteQuant == -1)

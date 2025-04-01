@@ -4,22 +4,18 @@
 	<!-- _________________________ Application Settings _________________________ -->
 
 	<app 
-		title="Collection: DX Update" file="Executable"
+		title="Friday Night Funkin'" file="Executable"
 		packageName="com.rei" package="com.rei"
 		main="Main" version="1.0" company="Rei"
 	/>
 
-	<!--The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the swf into a html file
-		or you can set the actual size of your file manually at "FlxPreloaderBase-onUpdate-bytesTotal"-->
 	<app preloader="flixel.system.FlxPreloader" />
-
-	<!--Minimum without FLX_NO_GAMEPAD: 11.8, without FLX_NO_NATIVE_CURSOR: 11.2-->
 	<set name="SWF_VERSION" value="11.8" />
 
 	<!-- ____________________________ Window Settings ___________________________ -->
 
 	<!--These window settings apply to all targets-->
-	<window width="1280" height="720" fps="" background="#000000" hardware="true" vsync="false" />
+	<window width="1280" height="720" fps="60" background="#000000" hardware="true" vsync="false" />
 
 	<!--HTML5-specific-->
 	<window if="html5" resizable="true" />
@@ -36,27 +32,24 @@
 
 	<!-- _____________________________ Path Settings ____________________________ -->
 
-	<set name="BUILD_DIR" value="export" />
-	<set name="BUILD_DIR" value="export/debug" if="debug" />
-	<set name="BUILD_DIR" value="export/release" unless="debug" />
-
 	<!--
 		if you ever want to preload specific asset folders, add them here
 		keep in mind that if you don't want said asset folders to be cleared by the game's paths system
 		simply add the files to Paths.hx, on the dumpExclusions array
 	-->
 
+	<set name="BUILD_DIR" value="export" />
+	<set name="BUILD_DIR" value="export/debug" if="debug" />
+	<set name="BUILD_DIR" value="export/release" unless="debug" />
+
 	<source path="source" />
 	<assets path="assets" />
 	<assets path="assets/songs" />
 	<assets path="assets/music" preload="true" />
 
-	<!--<assets path="mods" />-->
-
 	<!-- _______________________________ Libraries ______________________________ -->
 
 	<haxedev set='webgl' if="html5"/>
-
 	<haxelib name="hxCodec"/>
 	<haxelib name="flixel"/>
 	<haxelib name="flixel-addons"/>
