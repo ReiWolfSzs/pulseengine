@@ -158,7 +158,7 @@ class Init extends FlxState
 	];
 
 	override public function create():Void {
-		FlxG.save.bind("CapeEngine");
+		FlxG.save.bind("pulseEngine"); //PussyEngine
 		Highscore.load();
 
 		loadSettings();
@@ -170,7 +170,6 @@ class Init extends FlxState
 
 		// Some additional changes to default HaxeFlixel settings, both for ease of debugging and usability.
 		FlxG.fixedTimestep = false; // This ensures that the game is not tied to the FPS
-		FlxG.mouse.useSystemCursor = true; // Use system cursor because it's prettier
 		FlxG.mouse.visible = false; // Hide mouse on start
 		FlxGraphic.defaultPersist = true; // make sure we control all of the memory
 
