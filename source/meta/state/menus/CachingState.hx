@@ -1,7 +1,6 @@
 package meta.state.menus;
 
 import gameObjects.userInterface.SquareRiser;
-import flixel.tweens.FlxTween;
 import flixel.util.FlxSpriteUtil;
 import gameObjects.userInterface.AudioVisualizer.BarVisualizer;
 import gameObjects.Character;
@@ -12,7 +11,6 @@ import meta.data.Song;
 import flixel.FlxG;
 import flixel.util.FlxColor;
 import gameObjects.userInterface.PhillyGlow.PhillyGlowGradient;
-import flixel.FlxSprite;
 import flixel.system.FlxSound;
 import flixel.util.FlxTimer;
 import flixel.addons.text.FlxTypeText;

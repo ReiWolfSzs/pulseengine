@@ -10,8 +10,6 @@ import openfl.filters.ShaderFilter;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.tweens.FlxTween;
-import flixel.FlxSprite;
 
 using StringTools;
 

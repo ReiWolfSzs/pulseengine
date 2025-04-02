@@ -6,7 +6,6 @@ import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.FlxSprite;
 import flixel.FlxSubState;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -16,7 +15,6 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.sound.FlxSound;
 import flixel.tweens.FlxEase;
-import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxSort;
 import flixel.util.FlxTimer;
@@ -71,7 +69,12 @@ class PlayState extends MusicBeatState
 	public static var secondOpponent:Character;
 	public static var gf:Character;
 	public static var boyfriend:Boyfriend;
+
+	// hold sustains
+	var frozenCharacters:ObjectMap<Character, Bool> = new ObjectMap();
 	public var characters:Array<Character> = [boyfriend, dadOpponent, gf, secondOpponent];
+	public var animSuffix:String;
+	public var animCancelled:Bool = false;
 
 	public static var assetModifier:String = 'base';
 	public static var changeableSkin:String = 'default';
@@ -97,7 +100,6 @@ class PlayState extends MusicBeatState
 	private static var prevCamFollow:FlxObject;
 
 	public static var removeZoom:Bool = false;
-	public static var canBeat:Bool = false;
 	private var curSong:String = "";
 	private var gfSpeed:Int = 1;
 
@@ -562,6 +564,25 @@ class PlayState extends MusicBeatState
 		stageBuild.stageUpdateConstant(elapsed, boyfriend, gf, dadOpponent);
 
 		super.update(elapsed);
+		switch(focus) {
+			case DAD:
+				var char = dadOpponent;
+				if (frozenCharacters.get(char) && char.animation.curAnim != null) {
+					char.animation.curAnim.paused = true;
+				} else {
+					if (char.animation.curAnim != null) 
+						char.animation.curAnim.paused = false;
+				}
+			case BF:
+				var char = boyfriend;
+				if (frozenCharacters.get(char) && char.animation.curAnim != null) {
+					char.animation.curAnim.paused = true;
+				} else {
+					if (char.animation.curAnim != null) 
+						char.animation.curAnim.paused = false;
+				}
+			default:
+		}
 		FlxTweenPlayState.globalManager.update(elapsed);
 		timerManager.update(elapsed);
 
@@ -619,9 +640,17 @@ class PlayState extends MusicBeatState
 					{
 						songTime = (songTime + Conductor.songPosition) / 2;
 						Conductor.lastSongPos = Conductor.songPosition;
+						// Conductor.songPosition += FlxG.elapsed * 1000;
+						// trace('MISSED FRAME');
 					}
 				}
+
+				// Conductor.lastSongPos = FlxG.sound.music.time;
+				// song shit for testing lols
 			}
+
+			// boyfriend.playAnim('singLEFT', true);
+			// */
 
 			if (generatedMusic && PlayState.SONG.notes[Std.int(curStep / 16)] != null)
 			{
@@ -656,7 +685,7 @@ class PlayState extends MusicBeatState
 			// camera stuffs
 			if (removeZoom) {
 				FlxG.camera.zoom = FlxMath.lerp(defaultCamZoom + forceZoom[0], FlxG.camera.zoom, easeLerp);
-			} 
+			}
 
 			for (hud in allUIs)
 				hud.zoom = FlxMath.lerp(1 + forceZoom[1], hud.zoom, easeLerp);
@@ -683,7 +712,7 @@ class PlayState extends MusicBeatState
 				ShaderObject.setValue("block.intensity.value", [0.1]);
 				for (hud in PlayState.instance.allUIs)
 					hud.visible = false;
-				openSubState(new GameOverSubstate());
+				openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
 
 				#if DISCORD_RPC
 				Discord.changePresence("Game Over - " + songDetails, detailsSub, iconRPC);
@@ -859,7 +888,7 @@ class PlayState extends MusicBeatState
 									note.tooLate = true;
 
 								vocals.volume = 0;
-								missNoteCheck((Init.trueSettings.get('Ghost Tapping')) ? true : true, daNote.noteData, boyfriend, true);
+								missNoteCheck((Init.trueSettings.get('Ghost Tapping')) ? true : false, daNote.noteData, boyfriend, true);
 								// ambiguous name
 								Timings.updateAccuracy(0);
 							}
@@ -879,7 +908,7 @@ class PlayState extends MusicBeatState
 										}
 										if (!breakFromLate)
 										{
-											missNoteCheck((Init.trueSettings.get('Ghost Tapping')) ? true : true, daNote.noteData, boyfriend, true);
+											missNoteCheck((Init.trueSettings.get('Ghost Tapping')) ? true : false, daNote.noteData, boyfriend, true);
 											for (note in parentNote.childrenNotes)
 												note.tooLate = true;
 										}
@@ -984,6 +1013,23 @@ class PlayState extends MusicBeatState
 
 			if (!coolNote.isSustainNote)
 				destroyNote(characterStrums, coolNote);
+
+			/*if (coolNote.isSustainNote) {
+				if ((character.animation.exists(character.singAnims[coolNote.noteData] + animSuffix + '-loop') || character.animation.exists(character.singAnims[coolNote.noteData] + '-loop')) || StringTools.endsWith(character.getAnimName(), '-loop')) {
+					if (StringTools.endsWith(character.getAnimName(), '-loop')) {
+						animCancelled = true;
+						character.lastHit = Conductor.songPosition;
+					} else if (!animCancelled) {
+						animSuffix += '-loop';
+					}
+				}
+			} else frozenCharacters.set(character, true);
+		
+			if (coolNote.isSustainNote) {
+				coolNote.animation.finishCallback == function(name:String) {
+					frozenCharacters.set(character, false);
+				}
+			}*/
 		}
 	}
 
@@ -1081,6 +1127,15 @@ class PlayState extends MusicBeatState
 			// check if the note was a good hit
 			if (daNote.strumTime <= Conductor.songPosition)
 			{
+				// use a switch thing cus it feels right idk lol
+				// make sure the strum is played for the autoplay stuffs
+				/*
+					charStrum.forEach(function(cStrum:UIStaticArrow)
+					{
+						strumCallsAuto(cStrum, 0, daNote);
+					});
+				 */
+
 				// kill the note, then remove it from the array
 				var canDisplayJudgement = false;
 				if (strumline.displayJudgements)
@@ -1095,11 +1150,13 @@ class PlayState extends MusicBeatState
 							// removing the fucking check apparently fixes it
 							// god damn it that stupid glitch with the double judgements is annoying
 						}
+						//
 					}
 					notesPressedAutoplay.push(daNote);
 				}
 				goodNoteHit(daNote, char, strumline, canDisplayJudgement);
 			}
+			//
 		}
 
 		var holdControls:Array<Bool> = [controls.LEFT, controls.DOWN, controls.UP, controls.RIGHT];
@@ -1130,20 +1187,25 @@ class PlayState extends MusicBeatState
 			if (PlayState.SONG.notes[Std.int(curStep / 16)] != null)
 			{
 				var charTurn:Focus;
-				if (!mustHit) charTurn = DAD;
-				else charTurn = BF;
+				if (!mustHit)
+					charTurn = DAD;
+				else 
+					charTurn = BF;
 
 				if (charTurn != focus) return;
 
 				camDisplaceX = 0;
-
-				if (cStrum.members[0].animation.curAnim.name == 'confirm') camDisplaceX -= camDisplaceExtend;
-				if (cStrum.members[3].animation.curAnim.name == 'confirm') camDisplaceX += camDisplaceExtend;
+				if (cStrum.members[0].animation.curAnim.name == 'confirm')
+					camDisplaceX -= camDisplaceExtend;
+				if (cStrum.members[3].animation.curAnim.name == 'confirm')
+					camDisplaceX += camDisplaceExtend;
 
 				camDisplaceY = 0;
-
-				if (cStrum.members[1].animation.curAnim.name == 'confirm') camDisplaceY += camDisplaceExtend;
-				if (cStrum.members[2].animation.curAnim.name == 'confirm') camDisplaceY -= camDisplaceExtend;
+				if (cStrum.members[1].animation.curAnim.name == 'confirm')
+					camDisplaceY += camDisplaceExtend;
+				if (cStrum.members[2].animation.curAnim.name == 'confirm')
+					camDisplaceY -= camDisplaceExtend;
+				
 			}
 		}
 		//
@@ -1181,13 +1243,15 @@ class PlayState extends MusicBeatState
 
 	override public function onFocus():Void
 	{
-		if (!paused) updateRPC(false);
+		if (!paused)
+			updateRPC(false);
 		super.onFocus();
 	}
 
 	override public function onFocusLost():Void
 	{
-		if (canPause && !paused && !Init.trueSettings.get('Auto Pause')) pauseGame();
+		if (canPause && !paused && !Init.trueSettings.get('Auto Pause'))
+			pauseGame();
 		super.onFocusLost();
 	}
 
@@ -1195,28 +1259,32 @@ class PlayState extends MusicBeatState
 	{
 		#if DISCORD_RPC
 		var displayRPC:String = (pausedRPC) ? detailsPausedText : songDetails;
+
 		if (health > 0)
 		{
-			if (Conductor.songPosition > 0 && !pausedRPC) Discord.changePresence(displayRPC, detailsSub, iconRPC, true, songLength - Conductor.songPosition);
-			else Discord.changePresence(displayRPC, detailsSub, iconRPC);
+			if (Conductor.songPosition > 0 && !pausedRPC)
+				Discord.changePresence(displayRPC, detailsSub, iconRPC, true, songLength - Conductor.songPosition);
+			else
+				Discord.changePresence(displayRPC, detailsSub, iconRPC);
 		}
 		#end
 	}
 
 	var animationsPlay:Array<Note> = [];
+
 	private var ratingTiming:String = "";
+
 	function popUpScore(baseRating:String, timing:String, strumline:Strumline, coolNote:Note)
 	{
 		// set up the rating
 		var score:Int = 50;
 		if (baseRating == "sick") {
 			spawnNoteSplashOnNote(coolNote);
-		} else {
+			// if it isn't a sick, and you had a sick combo, then it becomes not sick :(
 			if (allSicks) {
 				allSicks = false;
 			}
 		}
-		// fuck you golden sick
 		displayRating(baseRating, timing);
 		Timings.updateAccuracy(Timings.judgementsMap.get(baseRating)[3]);
 		score = Std.int(Timings.judgementsMap.get(baseRating)[2]);
@@ -1227,6 +1295,7 @@ class PlayState extends MusicBeatState
 	}
 
 	private var createdColor = FlxColor.fromRGB(204, 66, 66);
+
 	function popUpCombo(?cache:Bool = false)
 	{
 		var comboString:String = Std.string(combo);
@@ -1246,6 +1315,7 @@ class PlayState extends MusicBeatState
 
 		for (scoreInt in 0...stringArray.length)
 		{
+			// numScore.loadGraphic(Paths.image('UI/' + pixelModifier + 'num' + stringArray[scoreInt]));
 			var numScore = ForeverAssets.generateCombo('combo', stringArray[scoreInt], (!negative ? allSicks : false), assetModifier, changeableSkin, 'UI', negative, createdColor, scoreInt);
 			numScore.cameras = [camHUD];
 			add(numScore);
@@ -1507,12 +1577,6 @@ class PlayState extends MusicBeatState
 	override function beatHit() {
 		super.beatHit();
 
-		for (hud in allUIs) {
-			if (canBeat) {
-				hud.zoom += 0.025;
-			}
-		}
-		
 		eventHandler.onBeat(curBeat);
 
 		if (SONG.notes[Math.floor(curStep / 16)] != null)

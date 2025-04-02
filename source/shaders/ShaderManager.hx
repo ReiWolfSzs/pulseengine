@@ -1,6 +1,5 @@
 package shaders;
 
-import flixel.math.FlxMath;
 import shaders.codes.ChromaticAberration;
 import shaders.codes.Bloom;
 import openfl.display.BitmapData;

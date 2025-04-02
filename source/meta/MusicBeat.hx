@@ -44,7 +44,7 @@ class MusicBeatState extends FNFUIState
 		}
 
 		if (transIn != null)
-			trace('reg ' + transIn.region);
+			//trace('reg ' + transIn.region);
 
 		super.create();
 

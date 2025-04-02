@@ -1,8 +1,8 @@
 package meta.state;
 
 import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.addons.display.FlxBackdrop;
 import flixel.addons.display.FlxGridOverlay;
 import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileDiamond;
 import flixel.addons.transition.FlxTransitionableState;
@@ -17,7 +17,6 @@ import flixel.system.FlxSound;
 import flixel.system.ui.FlxSoundTray;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
-import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import lime.app.Application;
@@ -30,12 +29,6 @@ import openfl.Assets;
 
 using StringTools;
 
-/**
-	I hate this state so much that I gave up after trying to rewrite it 3 times and just copy pasted the original code
-	with like minor edits so it actually runs in forever engine. I'll redo this later, I've said that like 12 times now
-
-	I genuinely fucking hate this code no offense ninjamuffin I just dont like it and I don't know why or how I should rewrite it
-**/
 class TitleState extends MusicBeatState {
 	static var initialized:Bool = false;
 
@@ -52,8 +45,10 @@ class TitleState extends MusicBeatState {
 	override public function create():Void {
 		controls.setKeyboardScheme(None, false);
 		curWacky = FlxG.random.getObject(getIntroTextShit());
-		super.create();
 
+		Conductor.changeBPM(102);
+
+		super.create();
 		startIntro();
 	}
 
@@ -62,36 +57,43 @@ class TitleState extends MusicBeatState {
 	var danceLeft:Bool = false;
 	var titleText:FlxSprite;
 
+	var initLogowidth:Float = 0;
+	var newLogoScale:Float = 0;
 	function startIntro() {
 		if (!initialized) {
 			#if DISCORD_RPC
-			Discord.changePresence('TITLE SCREEN', 'Main Menu');
+			Discord.changePresence('TitleState', 'Main Menu');
 			#end
+
+			var diamond:FlxGraphic = FlxGraphic.fromClass(GraphicTransTileDiamond);
+			diamond.persist = true;
+			diamond.destroyOnNoUse = false;
+
+			FlxTransitionableState.defaultTransIn = new TransitionData(FADE, FlxColor.BLACK, 0.32, new FlxPoint(0, -1),
+				{asset: diamond, width: 32, height: 32}, new FlxRect(-200, -200, FlxG.width * 1.4, FlxG.height * 1.4));
+			FlxTransitionableState.defaultTransOut = new TransitionData(FADE, FlxColor.BLACK, 0.32, new FlxPoint(0, 1),
+				{asset: diamond, width: 32, height: 32}, new FlxRect(-200, -200, FlxG.width * 1.4, FlxG.height * 1.4));
+
+			transIn = FlxTransitionableState.defaultTransIn;
+			transOut = FlxTransitionableState.defaultTransOut;
 
 			ForeverTools.resetMenuMusic(true);
 		}
-
 		persistentUpdate = true;
 
 		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		add(bg);
 
-		logoBl = new FlxSprite(-150, -100);
+		logoBl = new FlxSprite();
 		logoBl.frames = Paths.getSparrowAtlas('menus/base/title/logoBumpin');
+		logoBl.animation.addByPrefix('bumpin', 'logo bumpin', 24, false);
+		logoBl.animation.play('bumpin');
 		logoBl.antialiasing = true;
-		logoBl.animation.addByPrefix('bump', 'logo bumpin', 24);
-		logoBl.animation.play('bump');
+		logoBl.screenCenter(XY);
 		logoBl.updateHitbox();
-
-		gfDance = new FlxSprite(FlxG.width * 0.4, FlxG.height * 0.07);
-		gfDance.frames = Paths.getSparrowAtlas('menus/base/title/gfDanceTitle');
-		gfDance.animation.addByIndices('danceLeft', 'gfDance', [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], "", 24, false);
-		gfDance.animation.addByIndices('danceRight', 'gfDance', [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], "", 24, false);
-		gfDance.antialiasing = true;
-		add(gfDance);
 		add(logoBl);
 
-		titleText = new FlxSprite(100, FlxG.height * 0.8);
+		titleText = new FlxSprite(125, FlxG.height * 0.8);
 		titleText.frames = Paths.getSparrowAtlas('menus/base/title/titleEnter');
 		titleText.animation.addByPrefix('idle', "Press Enter to Begin", 24);
 		titleText.animation.addByPrefix('press', "ENTER PRESSED", 24);
@@ -102,90 +104,57 @@ class TitleState extends MusicBeatState {
 
 		credGroup = new FlxGroup();
 		add(credGroup);
+
 		textGroup = new FlxGroup();
 
 		blackScreen = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		credGroup.add(blackScreen);
 
-		credTextShit = new Alphabet(0, 0, "ninjamuffin99\nPhantomArcade\nkawaisprite\nevilsk8er", true);
+		credTextShit = new Alphabet(0, 0, "", true);
 		credTextShit.screenCenter();
 
 		credTextShit.visible = false;
-
-		ngSpr = new FlxSprite(0, FlxG.height * 0.52).loadGraphic(Paths.image('menus/base/title/newgrounds_logo'));
-		add(ngSpr);
-		ngSpr.visible = false;
-		ngSpr.setGraphicSize(Std.int(ngSpr.width * 0.8));
-		ngSpr.updateHitbox();
-		ngSpr.screenCenter(X);
-		ngSpr.antialiasing = true;
-
 		FlxTween.tween(credTextShit, {y: credTextShit.y + 20}, 2.9, {ease: FlxEase.quadInOut, type: PINGPONG});
 
-		if (initialized)
-			skipIntro();
-		else
-			initialized = true;
+		if (initialized) skipIntro();
+		else initialized = true;
 	}
 
 	function getIntroTextShit():Array<Array<String>> {
-		var swagGoodArray:Array<Array<String>> = [];
+		var swagGoodArray:Array<Array<String>> = [['no idea what psych engine is', 'vine boom sfx']];
 		if (Assets.exists(Paths.txt('introText'))) {
 			var fullText:String = Assets.getText(Paths.txt('introText'));
 			var firstArray:Array<String> = fullText.split('\n');
-
-			for (i in firstArray)
-				swagGoodArray.push(i.split('--'));
+			for (i in firstArray) swagGoodArray.push(i.split('--'));
 		}
 		return swagGoodArray;
 	}
 
 	var transitioning:Bool = false;
-
 	override function update(elapsed:Float) {
-		if (FlxG.sound.music != null)
-			Conductor.songPosition = FlxG.sound.music.time;
+		if (FlxG.sound.music != null) Conductor.songPosition = FlxG.sound.music.time;
 
 		var pressedEnter:Bool = FlxG.keys.justPressed.ENTER;
-
-		#if mobile
-		for (touch in FlxG.touches.list) {
-			if (touch.justPressed) {
-				pressedEnter = true;
-			}
-		}
-		#end
-
 		var gamepad:FlxGamepad = FlxG.gamepads.lastActive;
-		if (gamepad != null) {
-			if (gamepad.justPressed.START)
-				pressedEnter = true;
 
-			#if switch
-			if (gamepad.justPressed.B)
-				pressedEnter = true;
-			#end
+		if (gamepad != null) {
+			if (gamepad.justPressed.START) pressedEnter = true;
 		}
 
 		if (pressedEnter && !transitioning && skippedIntro) {
 			titleText.animation.play('press');
 
 			FlxG.camera.flash(FlxColor.WHITE, 1);
-			FlxG.sound.play(Paths.sound("system/confirm"), 0.7);
+			FlxG.sound.play(Paths.sound('system/confirm'), 0.7);
 
 			transitioning = true;
-			// FlxG.sound.music.stop();
-
 			new FlxTimer().start(2, function(tmr:FlxTimer) {
-				var version:String = "v" + Application.current.meta.get('version');
 				FlxG.switchState(new MainMenuState());
 			});
 		}
+		if (pressedEnter && !skippedIntro && initialized) skipIntro();
 
-		// hi game, please stop crashing its kinda annoyin, thanks!
-		if (pressedEnter && !skippedIntro && initialized) {
-			skipIntro();
-		}
+		//trace(Conductor.bpm);
 		super.update(elapsed);
 	}
 
@@ -214,57 +183,33 @@ class TitleState extends MusicBeatState {
 		}
 	}
 
+	var reverser = 1;
 	override function beatHit() {
 		super.beatHit();
-
-		logoBl.animation.play('bump');
-		danceLeft = !danceLeft;
-
-		if (danceLeft)
-			gfDance.animation.play('danceRight');
-		else
-			gfDance.animation.play('danceLeft');
-
-		FlxG.log.add(curBeat);
+		logoBl.animation.play('bumpin');
 
 		switch (curBeat) {
 			case 1:
-				createCoolText(['ninjamuffin', 'phantomArcade', 'kawaisprite', 'evilsker']);
+				createCoolText(['Hitoshy']);
 			case 3:
-				addMoreText('present');
-			case 4:
-				deleteCoolText();
+				addMoreText('OldDemmolidor');
 			case 5:
-				createCoolText(['Not association', 'with']);
+				addMoreText('');
+				addMoreText('PRESENT');
 			case 7:
-				addMoreText('newgrounds');
-				ngSpr.visible = true;
-			case 8:
 				deleteCoolText();
-				ngSpr.visible = false;
-			case 9:
-				createCoolText([curWacky[0]]);
-			case 11:
-				addMoreText(curWacky[1]);
-			case 12:
-				deleteCoolText();
-			case 13:
-				addMoreText('Friday');
-			case 14:
-				addMoreText('Night');
-			case 15:
-				addMoreText('Funkin');
-			case 16:
 				skipIntro();
 		}
 	}
 
+	override function stepHit() {
+		super.stepHit();
+	}
+
 	var skippedIntro:Bool = false;
-
 	function skipIntro():Void {
-		if (!skippedIntro) {
+		if (!skippedIntro){
 			remove(ngSpr);
-
 			FlxG.camera.flash(FlxColor.WHITE, 4);
 			remove(credGroup);
 			skippedIntro = true;

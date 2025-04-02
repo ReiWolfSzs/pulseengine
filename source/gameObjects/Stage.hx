@@ -4,10 +4,8 @@ import haxe.io.Path;
 import flixel.util.FlxColor;
 import flixel.FlxBasic;
 import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxPoint;
-import flixel.tweens.FlxTween;
 import gameObjects.background.*;
 import meta.CoolUtil;
 import meta.data.Conductor;
@@ -32,96 +30,39 @@ class Stage extends FlxTypedGroup<FlxBasic> {
 	public var foreground:FlxTypedGroup<FlxSprite> = new FlxTypedGroup<FlxSprite>();
 
 	public var splashSkin:String = "noteSplashes";
-
-	var limoSky:FlxSprite;
-	var limoStar:FlxSprite;
-	var limoCar1:FlxSprite;
-	var limoCar2:FlxSprite;
 	public function new(curStage) {
 		super();
 		this.curStage = curStage;
 
 		switch (CoolUtil.spaceToDash(PlayState.SONG.song.toLowerCase())) {
-			case "satin-panties":
-				curStage = 'limo';
 			default:
 				curStage = 'stage';
 		}
 
-		game.curStage = curStage;
 		switch (curStage) {
-			case 'limo':
-				var scaleX:Float = 1;
-				var scaleY:Float = 1;
-				game.canBeat = true; // camBeat on 
-				game.removeZoom = true;
-				game.defaultCamZoom = 0.2;
-
-				limoSky = new FlxSprite(0, 0).loadGraphic(Paths.image('backgrounds/' + curStage + '/limoSunset'));
-				background.add(limoSky);
-
-				limoStar = new FlxSprite(0, 0);
-				limoStar.frames = Paths.getSparrowAtlas('backgrounds/' + curStage + '/shooting star');
-				limoStar.animation.addByPrefix('idle', 'shooting star', 24);
-				limoStar.animation.play('idle');
-				limoStar.antialiasing = true;
-				background.add(limoCar1);
-
-				limoCar1 = new FlxSprite(0, 550);
-				limoCar1.frames = Paths.getSparrowAtlas('backgrounds/' + curStage + '/bglimo');
-				limoCar1.animation.addByPrefix('idle', 'background limo blue', 24);
-				limoCar1.animation.play('idle');
-				limoCar1.antialiasing = true;
-				background.add(limoCar1);
-
-				limoCar2 = new FlxSprite(120, 600);
-				limoCar2.frames = Paths.getSparrowAtlas('backgrounds/' + curStage + '/limoDrive');
-				limoCar2.animation.addByPrefix('idle', 'Limo stage', 24);
-				limoCar2.animation.play('idle');
-				limoCar2.antialiasing = true;
-				background.add(limoCar2);
 			default:
-				PlayState.defaultCamZoom = 0.9;
+				game.defaultCamZoom = 0.9;
 				curStage = 'stage';
 				var bg:FNFSprite = new FNFSprite(-600, -200).loadGraphic(Paths.image('backgrounds/' + curStage + '/stageback'));
-				bg.antialiasing = true;
-				bg.scrollFactor.set(0.9, 0.9);
-				bg.active = false;
-
-				// add to the final array
-				add(bg);
+				background.add(bg);
 
 				var stageFront:FNFSprite = new FNFSprite(-650, 600).loadGraphic(Paths.image('backgrounds/' + curStage + '/stagefront'));
 				stageFront.setGraphicSize(Std.int(stageFront.width * 1.1));
-				stageFront.updateHitbox();
-				stageFront.antialiasing = true;
-				stageFront.scrollFactor.set(0.9, 0.9);
-				stageFront.active = false;
-
-				// add to the final array
-				add(stageFront);
+				background.add(stageFront);
 
 				var stageCurtains:FNFSprite = new FNFSprite(-500, -300).loadGraphic(Paths.image('backgrounds/' + curStage + '/stagecurtains'));
 				stageCurtains.setGraphicSize(Std.int(stageCurtains.width * 0.9));
-				stageCurtains.updateHitbox();
-				stageCurtains.antialiasing = true;
-				stageCurtains.scrollFactor.set(1.3, 1.3);
-				stageCurtains.active = false;
-
-				// add to the final array
-				add(stageCurtains);
+				background.add(stageCurtains);
 		}
 	}
 
 	// return the girlfriend's type
 	public function returnGFtype(curStage) {
 		var gfVersion:String = 'gf';
-
 		switch (curStage) {
-			case 'hell':
-				gfVersion = 'sonic';
+			default:
+				gfVersion = 'gf';
 		}
-
 		return gfVersion;
 	}
 
@@ -138,12 +79,9 @@ class Stage extends FlxTypedGroup<FlxBasic> {
 
 	public function repositionPlayers(curStage, boyfriend:Character, dad:Character, gf:Character):Void {
 		switch (curStage) {
-			case 'limo':
-				dad.setPosition(0, 0);
-				boyfriend.setPosition(1400, 260);
 			case "stage":
 				dad.setPosition(0, 0);
-				boyfriend.setPosition(0, 0);
+				boyfriend.setPosition(700, 0);
 		}
 	}
 

@@ -1,8 +1,6 @@
 package meta.data;
 
 import flixel.FlxG;
-import flixel.FlxSprite;
-import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import gameObjects.userInterface.notes.*;

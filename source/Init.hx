@@ -1,4 +1,3 @@
-import meta.state.menus.FreeplayState;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.addons.transition.FlxTransitionableState;
@@ -90,7 +89,7 @@ class Init extends FlxState
 			NOT_FORCED
 		],
 		'No Camera Note Movement' => [
-			false,
+			true,
 			Checkmark,
 			'When enabled, left and right notes no longer move the camera.',
 			NOT_FORCED
@@ -173,7 +172,7 @@ class Init extends FlxState
 		FlxG.mouse.visible = false; // Hide mouse on start
 		FlxGraphic.defaultPersist = true; // make sure we control all of the memory
 
-		Main.switchState(this, new MainMenuState());
+		Main.switchState(this, new TitleState());
 	}
 
 	public static function loadSettings():Void {

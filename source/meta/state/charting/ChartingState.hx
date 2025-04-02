@@ -1,7 +1,6 @@
 package meta.state.charting;
 
 import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.addons.display.FlxGridOverlay;
 import flixel.addons.ui.FlxInputText;
 import flixel.addons.ui.FlxUI9SliceSprite;
@@ -14,7 +13,6 @@ import flixel.addons.ui.FlxUITabMenu;
 import flixel.addons.ui.FlxUITooltip.FlxUITooltipStyle;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.group.FlxGroup;
-import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.sound.FlxSound;
 import flixel.text.FlxText;
@@ -165,7 +163,7 @@ class ChartingState extends MusicBeatState
 			_song = PlayState.SONG;
 		} else {
 			_song = {
-				song: 'satin-panties',
+				song: 'test',
 				notes: [],
 				bpm: 150,
 				needsVoices: true,
@@ -690,6 +688,7 @@ class ChartingState extends MusicBeatState
 			PlayState.SONG = _song;
 			songMusic.stop();
 			vocals.stop();
+			FlxG.mouse.visible = false;
 			Main.switchState(this, new PlayState());
 		}
 

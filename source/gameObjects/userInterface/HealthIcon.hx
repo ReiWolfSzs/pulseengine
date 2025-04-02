@@ -1,7 +1,6 @@
 package gameObjects.userInterface;
 
 import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.graphics.FlxGraphic;
 import sys.FileSystem;
 
@@ -33,7 +32,7 @@ class HealthIcon extends FlxSprite
 				iconPath = trimmedCharacter;
 			else
 				iconPath = 'face';
-			trace('$char icon trying $iconPath instead you fuck');
+			//trace('$char icon trying $iconPath instead you fuck');
 		}
 
 		antialiasing = true;

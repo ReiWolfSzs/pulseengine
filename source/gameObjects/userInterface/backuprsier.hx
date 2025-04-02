@@ -2,7 +2,6 @@ package gameObjects.userInterface;
 
 import flixel.FlxBasic;
 import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
 
 class Backupriser extends FlxSpriteGroup {

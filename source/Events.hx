@@ -2,16 +2,13 @@ package;
 
 import lime.app.Application;
 import flixel.effects.particles.FlxEmitter;
-import flixel.math.FlxMath;
 import flixel.tweens.FlxEase;
-import flixel.tweens.FlxTween;
 import flixel.util.FlxTimer;
 import flixel.text.FlxText;
 import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
 import meta.FlxTweenPlayState;
 import flixel.util.FlxColor;
 import flixel.FlxG;
-import flixel.FlxSprite;
 import shaders.ShaderObject;
 import flixel.FlxBasic;
 import meta.state.PlayState;

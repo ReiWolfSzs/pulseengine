@@ -1,5 +1,5 @@
 package gameObjects.userInterface;
-import flixel.FlxSprite;
+
 import flixel.util.FlxColor;
 import flixel.FlxG;
 

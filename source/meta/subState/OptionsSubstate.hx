@@ -1,9 +1,7 @@
 package meta.subState;
 
-import meta.state.menus.OptionsMenuState;
 import flixel.FlxBasic;
 import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.effects.FlxFlicker;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.keyboard.FlxKey;

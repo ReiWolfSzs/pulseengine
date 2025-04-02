@@ -1,7 +1,6 @@
 package gameObjects.userInterface.notes;
 
 import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
 import meta.state.PlayState;
 
@@ -51,15 +50,29 @@ class NoteSplash extends FlxSprite {
 				offset.set(30, 15);
 				trace("CustomSplash");*/
 			default:
-				frames = Paths.getSparrowAtlas("splashskins/default/" + skin);
-				for (i in 0...3) {
-					animation.addByPrefix("note1-" + i, "note impact " + i + " blue", 24, false);
-					animation.addByPrefix("note2-" + i, "note impact " + i + " green", 24, false);
-					animation.addByPrefix("note0-" + i, "note impact " + i + " purple", 24, false);
-					animation.addByPrefix("note3-" + i, "note impact " + i + " red", 24, false);
+				if (game.assetModifier == 'pixel') {
+					frames = Paths.getSparrowAtlas("splashskins/pixel/" + skin);
+					antialiasing = false;
+					for (i in 0...3) {
+						animation.addByPrefix("note1-" + i, "blue " + i, 24, false);
+						animation.addByPrefix("note2-" + i, "green " + i, 24, false);
+						animation.addByPrefix("note0-" + i, "purple " + i, 24, false);
+						animation.addByPrefix("note3-" + i, "orange " + i, 24, false);
+					}
+					scale.set(3, 3);
+					offset.set(-50, -30);
+					//trace("pixelSplash");
+				} else {
+					frames = Paths.getSparrowAtlas("splashskins/default/" + skin);
+					for (i in 0...3) {
+						animation.addByPrefix("note1-" + i, "note impact " + i + " blue", 24, false);
+						animation.addByPrefix("note2-" + i, "note impact " + i + " green", 24, false);
+						animation.addByPrefix("note0-" + i, "note impact " + i + " purple", 24, false);
+						animation.addByPrefix("note3-" + i, "note impact " + i + " red", 24, false);
+					}
+					offset.set(60, 70);
+					//trace("defaultSplash");
 				}
-				offset.set(60, 70);
-				//trace("defaultSplash");
 		}
 	}
 

@@ -19,7 +19,6 @@ import flxanimate.FlxAnimate;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import flixel.FlxSprite;
 import flixel.FlxBasic;
 
 using StringTools;
@@ -69,6 +68,14 @@ class Character extends FNFSprite
 		};
 
 		switch (curCharacter) {
+			case 'bf-dead':
+				frames = Paths.getSparrowAtlas('characters/BF_DEATH');
+				animation.addByPrefix('firstDeath', "BF dies", 24, false);
+				animation.addByPrefix('deathLoop', "BF Dead Loop", 24, true);
+				animation.addByPrefix('deathConfirm', "BF Dead confirm", 24, false);
+				playAnim('firstDeath');
+
+				flipX = true;
 			case 'bf':
 				frames = Paths.getSparrowAtlas('characters/BOYFRIEND');
 				animation.addByPrefix('idle', 'BF idle dance', 24, false);
@@ -82,22 +89,6 @@ class Character extends FNFSprite
 				animation.addByPrefix('singDOWNmiss', 'BF NOTE DOWN MISS', 24, false);
 				animation.addByPrefix('hey', 'BF HEY', 24, false);
 				animation.addByPrefix('scared', 'BF idle shaking', 24);
-				playAnim('idle');
-
-				flipX = true;
-				characterData.offsetY = -70;
-			case 'bf-haired':
-				frames = Paths.getSparrowAtlas('characters/BOYFRIEND_mom');
-				animation.addByPrefix('idle', 'BF idle dance', 24, true);
-				animation.addByPrefix('singUP', 'BF NOTE UP0', 24, true);
-				animation.addByPrefix('singLEFT', 'BF NOTE LEFT0', 24, true);
-				animation.addByPrefix('singRIGHT', 'BF NOTE RIGHT0', 24, true);
-				animation.addByPrefix('singDOWN', 'BF NOTE DOWN0', 24, true);
-				animation.addByPrefix('singUPmiss', 'BF NOTE UP MISS', 24, false);
-				animation.addByPrefix('singLEFTmiss', 'BF NOTE LEFT MISS', 24, false);
-				animation.addByPrefix('singRIGHTmiss', 'BF NOTE RIGHT MISS', 24, false);
-				animation.addByPrefix('singDOWNmiss', 'BF NOTE DOWN MISS', 24, false);
-				animation.addByPrefix('hey', 'BF HEY', 24, false);
 				playAnim('idle');
 
 				flipX = true;
@@ -118,16 +109,6 @@ class Character extends FNFSprite
 				animation.addByIndices('hairFall', "GF Dancing Beat Hair Landing", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "", 24, false);
 				animation.addByPrefix('scared', 'GF FEAR', 24);
 				playAnim('danceRight');
-
-				characterData.offsetY = -70;
-			case 'mom':
-				frames = Paths.getSparrowAtlas('characters/mom');
-				animation.addByPrefix('idle', 'idle', 24, true);
-				animation.addByPrefix('singUP', 'up', 24, true);
-				animation.addByPrefix('singLEFT', 'left', 24, true);
-				animation.addByPrefix('singRIGHT', 'right', 24, true);
-				animation.addByPrefix('singDOWN', 'down', 24, true);
-				playAnim('idle');
 
 				characterData.offsetY = -70;
 			default:

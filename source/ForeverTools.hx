@@ -16,9 +16,7 @@ class ForeverTools
 	public static function resetMenuMusic(resetVolume:Bool = false)
 	{
 		// make sure the music is playing
-		if (((FlxG.sound.music != null) && (!FlxG.sound.music.playing)) || (FlxG.sound.music == null))
-			FlxG.sound.playMusic(Paths.music("freakyMenu"));
-		//
+		if (((FlxG.sound.music != null) && (!FlxG.sound.music.playing)) || (FlxG.sound.music == null)) FlxG.sound.playMusic(Paths.music("freakyMenu"));
 	}
 
 	public static function returnSkinAsset(asset:String, assetModifier:String = 'base', changeableSkin:String = 'default', baseLibrary:String, ?defaultChangeableSkin:String = 'default', ?defaultBaseAsset:String = 'base'):String {

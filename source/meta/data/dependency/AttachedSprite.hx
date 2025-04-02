@@ -1,7 +1,5 @@
 package meta.data.dependency;
 
-import flixel.FlxSprite;
-
 using StringTools;
 
 class AttachedSprite extends FlxSprite

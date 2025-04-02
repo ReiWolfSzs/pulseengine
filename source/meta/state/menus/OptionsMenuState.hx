@@ -4,7 +4,6 @@ import shaders.ShaderObject;
 import flixel.FlxCamera;
 import flixel.FlxBasic;
 import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.effects.FlxFlicker;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.text.FlxText;
@@ -70,11 +69,6 @@ class OptionsMenuState extends MusicBeatState
 					['Centered Notefield', getFromOption],
 					['Ghost Tapping', getFromOption],
 					['', null],
-					['Text Settings', null],
-					['', null],
-					['Display Accuracy', getFromOption],
-					['Skip Text', getFromOption],
-					['', null],
 					['Meta Settings', null],
 					['', null],
 					['Auto Pause', getFromOption],
@@ -84,15 +78,8 @@ class OptionsMenuState extends MusicBeatState
 			],
 			'appearance' => [
 				[
-					['Judgements', null],
-					['', null],
-					['Fixed Judgements', getFromOption],
-					['Simply Judgements', getFromOption],
-					['Counter', getFromOption],
-					['', null],
 					['Notes', null],
 					['', null],
-					["Clip Style", getFromOption],
 					['Opaque Arrows', getFromOption],
 					['Opaque Holds', getFromOption],
 					['', null],
@@ -109,11 +96,8 @@ class OptionsMenuState extends MusicBeatState
 			categoryMap.get(category)[2] = returnExtrasMap(categoryMap.get(category)[1]);
 		}
 
-		var bg = new FlxSprite();
-		bg.makeGraphic(3000, 3000, 0xff0400F3); // blue????
-		bg.screenCenter();
+		var bg = new FNFSprite(0, 0).loadGraphic(Paths.image('menus/base/menuBGBlue')); 
 		add(bg);
-		bg.alpha = 0.65;
 
 		infoText = new FlxText(5, FlxG.height - 24, 0, "", 32);
 		infoText.setFormat("VCR OSD Mono", 20, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);

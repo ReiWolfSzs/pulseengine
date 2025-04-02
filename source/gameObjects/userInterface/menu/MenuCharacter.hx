@@ -1,6 +1,5 @@
 package gameObjects.userInterface.menu;
 
-import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
 
 class MenuCharacter extends FlxSprite

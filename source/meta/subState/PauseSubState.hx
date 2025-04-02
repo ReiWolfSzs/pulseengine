@@ -1,14 +1,12 @@
 package meta.subState;
 
 import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.FlxSubState;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.keyboard.FlxKey;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
-import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import meta.MusicBeat.MusicBeatSubState;
 import meta.data.font.Alphabet;
@@ -28,14 +26,11 @@ class PauseSubState extends MusicBeatSubState
 	var pauseMusic:FlxSound;
 
 	var mutex:Mutex;
-
-	public function new(x:Float, y:Float)
-	{
+	public function new(x:Float, y:Float) {
 		super();
 
 		mutex = new Mutex();
-		Thread.create(function()
-		{
+		Thread.create(function() {
 			mutex.acquire();
 			pauseMusic = new FlxSound().loadEmbedded(Paths.music('breakfast'), true, true);
 			pauseMusic.play(false, FlxG.random.int(0, Std.int(pauseMusic.length * 0.5)));
@@ -76,8 +71,7 @@ class PauseSubState extends MusicBeatSubState
 		grpMenuShit = new FlxTypedGroup<Alphabet>();
 		add(grpMenuShit);
 
-		for (i in 0...menuItems.length)
-		{
+		for (i in 0...menuItems.length) {
 			var songText:Alphabet = new Alphabet(0, (70 * i) + 30, menuItems[i], true, false);
 			songText.isMenuItem = true;
 			songText.targetY = i;
@@ -85,7 +79,6 @@ class PauseSubState extends MusicBeatSubState
 		}
 
 		changeSelection();
-
 		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
 	}
 
@@ -138,21 +131,16 @@ class PauseSubState extends MusicBeatSubState
 
 	function changeSelection(change:Int = 0):Void
 	{
-		curSelected = flixel.math.FlxMath.wrap(curSelected + change, 0, menuItems.length - 1);
+		curSelected = FlxMath.wrap(curSelected + change, 0, menuItems.length - 1);
 
 		var bullShit:Int = 0;
-		for (item in grpMenuShit.members)
-		{
+		for (item in grpMenuShit.members) {
 			item.targetY = bullShit - curSelected;
 			bullShit++;
 
 			item.alpha = 0.6;
-			// item.setGraphicSize(Std.int(item.width * 0.8));
-
-			if (item.targetY == 0)
-			{
+			if (item.targetY == 0) {
 				item.alpha = 1;
-				// item.setGraphicSize(Std.int(item.width));
 			}
 		}
 		//

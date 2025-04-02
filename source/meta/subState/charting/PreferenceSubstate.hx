@@ -2,15 +2,11 @@ package meta.subState.charting;
 
 import flixel.FlxCamera;
 import flixel.FlxG;
-import flixel.FlxSprite;
-import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import meta.MusicBeat.MusicBeatSubState;
 
-class PreferenceSubstate extends MusicBeatSubState
-{
-	//
+class PreferenceSubstate extends MusicBeatSubState {
 	private var blackTopBar:FlxSprite;
 	private var blackBottomBar:FlxSprite;
 
@@ -23,11 +19,9 @@ class PreferenceSubstate extends MusicBeatSubState
 
 	private var closing = false;
 
-	public function new(camera:FlxCamera)
-	{
+	public function new(camera:FlxCamera) {
 		super();
 
-		//
 		background = new FlxSprite(0, 0).makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		background.alpha = 0;
 		add(background);
@@ -40,14 +34,12 @@ class PreferenceSubstate extends MusicBeatSubState
 		blackBottomBar = new FlxSprite(0, FlxG.height).makeGraphic(FlxG.width, 75, FlxColor.BLACK);
 		add(blackBottomBar);
 
-		//
 		purpleTopBar = new FlxSprite(blackTopBar.x, blackTopBar.y + 60).makeGraphic(FlxG.width, 8, FlxColor.fromRGB(81, 0, 130));
 		add(purpleTopBar);
 
 		purpleBottomBar = new FlxSprite(blackBottomBar.x, blackBottomBar.y + 9).makeGraphic(FlxG.width, 8, FlxColor.fromRGB(81, 0, 130));
 		add(purpleBottomBar);
 
-		//
 		blackTopBar.cameras = [camera];
 		blackBottomBar.cameras = [camera];
 		topText.cameras = [camera];
@@ -57,8 +49,7 @@ class PreferenceSubstate extends MusicBeatSubState
 		purpleTopBar.cameras = [camera];
 	}
 
-	override public function update(elapsed:Float)
-	{
+	override public function update(elapsed:Float) {
 		super.update(elapsed);
 
 		blackTopBar.y = FlxMath.lerp(0, blackTopBar.y, 0.75);

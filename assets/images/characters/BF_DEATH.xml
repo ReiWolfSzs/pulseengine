@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextureAtlas imagePath="BF_DEATH.png">
-	<!-- Created by OneilR the funky XML WIZARD <3 -->
-	<!-- https://oneilr.newgrounds.com/ -->
-	<!-- O<><><><><><><><><><><><><><><><><><><><>O -->
 	<SubTexture name="BF dies0000" x="0" y="0" width="500" height="500" frameX="0" frameY="50" frameWidth="500" frameHeight="500" />
 	<SubTexture name="BF dies0001" x="500" y="0" width="500" height="500" frameX="0" frameY="50" frameWidth="500" frameHeight="500" />
 	<SubTexture name="BF dies0002" x="1000" y="0" width="500" height="500" frameX="0" frameY="50" frameWidth="500" frameHeight="500" />
@@ -61,8 +58,6 @@
 	<SubTexture name="BF dies0055" x="1000" y="2000" width="500" height="500" frameX="0" frameY="50" frameWidth="500" frameHeight="500" />
 	<SubTexture name="BF dies0056" x="1000" y="2000" width="500" height="500" frameX="0" frameY="50" frameWidth="500" frameHeight="500" />
 	<SubTexture name="BF dies0057" x="1000" y="2000" width="500" height="500" frameX="0" frameY="50" frameWidth="500" frameHeight="500" />
-	<!-- O<><><><><><><><><><><><><><><><><><><><>O -->
-	<!-- O<><><><><><><><><><><><><><><><><><><><>O -->
 	<SubTexture name="BF Dead Loop0000" x="0" y="2500" width="500" height="500" frameX="0" frameY="50" frameWidth="500" frameHeight="500" />
 	<SubTexture name="BF Dead Loop0001" x="500" y="2500" width="500" height="500" frameX="0" frameY="50" frameWidth="500" frameHeight="500" />
 	<SubTexture name="BF Dead Loop0002" x="500" y="2500" width="500" height="500" frameX="0" frameY="50" frameWidth="500" frameHeight="500" />
@@ -97,8 +92,6 @@
 	<SubTexture name="BF Dead Loop0031" x="2500" y="2500" width="500" height="500" frameX="0" frameY="50" frameWidth="500" frameHeight="500" />
 	<SubTexture name="BF Dead Loop0032" x="2500" y="2500" width="500" height="500" frameX="0" frameY="50" frameWidth="500" frameHeight="500" />
 	<SubTexture name="BF Dead Loop0033" x="2500" y="2500" width="500" height="500" frameX="0" frameY="50" frameWidth="500" frameHeight="500" />
-	<!-- O<><><><><><><><><><><><><><><><><><><><>O -->
-	<!-- O<><><><><><><><><><><><><><><><><><><><>O -->
 	<SubTexture name="BF Dead confirm0000" x="0" y="3000" width="500" height="500" frameX="0" frameY="50" frameWidth="500" frameHeight="500" />
 	<SubTexture name="BF Dead confirm0001" x="500" y="3000" width="500" height="500" frameX="0" frameY="50" frameWidth="500" frameHeight="500" />
 	<SubTexture name="BF Dead confirm0002" x="1000" y="3000" width="500" height="500" frameX="0" frameY="50" frameWidth="500" frameHeight="500" />

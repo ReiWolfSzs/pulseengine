@@ -3,7 +3,6 @@ package gameObjects.userInterface;
 import flixel.util.FlxPool;
 import flixel.FlxG;
 import flixel.group.FlxSpriteGroup;
-import flixel.FlxSprite;
 
 class SquareRiser extends FlxSpriteGroup{
 	public var minX:Float = 0;

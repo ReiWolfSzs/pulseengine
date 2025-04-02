@@ -1,10 +1,7 @@
 package gameObjects.userInterface.notes;
 
 import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
-import flixel.math.FlxMath;
-import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import gameObjects.userInterface.notes.*;
 import gameObjects.userInterface.notes.Strumline.UIStaticArrow;

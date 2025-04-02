@@ -11,7 +11,7 @@ import sys.FileSystem;
 
 class CoolUtil
 {
-	public static var difficultyArray:Array<String> = ['EASY', "NORMAL", "HARD"];
+	public static var difficultyArray:Array<String> = ['EASY', "NORMAL", "HARD", "NIGHTMARE"];
 	public static var difficultyLength = difficultyArray.length;
 
 	public static function difficultyFromNumber(number:Int):String
@@ -71,7 +71,7 @@ class CoolUtil
 			if (!folder.contains('.'))
 				libraryArray.push(folder);
 		}
-		trace(libraryArray);
+		//trace(libraryArray);
 		#end
 
 		return libraryArray;
