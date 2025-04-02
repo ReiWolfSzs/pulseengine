@@ -1081,15 +1081,6 @@ class PlayState extends MusicBeatState
 			// check if the note was a good hit
 			if (daNote.strumTime <= Conductor.songPosition)
 			{
-				// use a switch thing cus it feels right idk lol
-				// make sure the strum is played for the autoplay stuffs
-				/*
-					charStrum.forEach(function(cStrum:UIStaticArrow)
-					{
-						strumCallsAuto(cStrum, 0, daNote);
-					});
-				 */
-
 				// kill the note, then remove it from the array
 				var canDisplayJudgement = false;
 				if (strumline.displayJudgements)
@@ -1104,13 +1095,11 @@ class PlayState extends MusicBeatState
 							// removing the fucking check apparently fixes it
 							// god damn it that stupid glitch with the double judgements is annoying
 						}
-						//
 					}
 					notesPressedAutoplay.push(daNote);
 				}
 				goodNoteHit(daNote, char, strumline, canDisplayJudgement);
 			}
-			//
 		}
 
 		var holdControls:Array<Bool> = [controls.LEFT, controls.DOWN, controls.UP, controls.RIGHT];
@@ -1141,25 +1130,20 @@ class PlayState extends MusicBeatState
 			if (PlayState.SONG.notes[Std.int(curStep / 16)] != null)
 			{
 				var charTurn:Focus;
-				if (!mustHit)
-					charTurn = DAD;
-				else 
-					charTurn = BF;
+				if (!mustHit) charTurn = DAD;
+				else charTurn = BF;
 
 				if (charTurn != focus) return;
 
 				camDisplaceX = 0;
-				if (cStrum.members[0].animation.curAnim.name == 'confirm')
-					camDisplaceX -= camDisplaceExtend;
-				if (cStrum.members[3].animation.curAnim.name == 'confirm')
-					camDisplaceX += camDisplaceExtend;
+
+				if (cStrum.members[0].animation.curAnim.name == 'confirm') camDisplaceX -= camDisplaceExtend;
+				if (cStrum.members[3].animation.curAnim.name == 'confirm') camDisplaceX += camDisplaceExtend;
 
 				camDisplaceY = 0;
-				if (cStrum.members[1].animation.curAnim.name == 'confirm')
-					camDisplaceY += camDisplaceExtend;
-				if (cStrum.members[2].animation.curAnim.name == 'confirm')
-					camDisplaceY -= camDisplaceExtend;
-				
+
+				if (cStrum.members[1].animation.curAnim.name == 'confirm') camDisplaceY += camDisplaceExtend;
+				if (cStrum.members[2].animation.curAnim.name == 'confirm') camDisplaceY -= camDisplaceExtend;
 			}
 		}
 		//
@@ -1197,15 +1181,13 @@ class PlayState extends MusicBeatState
 
 	override public function onFocus():Void
 	{
-		if (!paused)
-			updateRPC(false);
+		if (!paused) updateRPC(false);
 		super.onFocus();
 	}
 
 	override public function onFocusLost():Void
 	{
-		if (canPause && !paused && !Init.trueSettings.get('Auto Pause'))
-			pauseGame();
+		if (canPause && !paused && !Init.trueSettings.get('Auto Pause')) pauseGame();
 		super.onFocusLost();
 	}
 
@@ -1213,32 +1195,28 @@ class PlayState extends MusicBeatState
 	{
 		#if DISCORD_RPC
 		var displayRPC:String = (pausedRPC) ? detailsPausedText : songDetails;
-
 		if (health > 0)
 		{
-			if (Conductor.songPosition > 0 && !pausedRPC)
-				Discord.changePresence(displayRPC, detailsSub, iconRPC, true, songLength - Conductor.songPosition);
-			else
-				Discord.changePresence(displayRPC, detailsSub, iconRPC);
+			if (Conductor.songPosition > 0 && !pausedRPC) Discord.changePresence(displayRPC, detailsSub, iconRPC, true, songLength - Conductor.songPosition);
+			else Discord.changePresence(displayRPC, detailsSub, iconRPC);
 		}
 		#end
 	}
 
 	var animationsPlay:Array<Note> = [];
-
 	private var ratingTiming:String = "";
-
 	function popUpScore(baseRating:String, timing:String, strumline:Strumline, coolNote:Note)
 	{
 		// set up the rating
 		var score:Int = 50;
 		if (baseRating == "sick") {
 			spawnNoteSplashOnNote(coolNote);
-			// if it isn't a sick, and you had a sick combo, then it becomes not sick :(
+		} else {
 			if (allSicks) {
 				allSicks = false;
 			}
 		}
+		// fuck you golden sick
 		displayRating(baseRating, timing);
 		Timings.updateAccuracy(Timings.judgementsMap.get(baseRating)[3]);
 		score = Std.int(Timings.judgementsMap.get(baseRating)[2]);
@@ -1249,7 +1227,6 @@ class PlayState extends MusicBeatState
 	}
 
 	private var createdColor = FlxColor.fromRGB(204, 66, 66);
-
 	function popUpCombo(?cache:Bool = false)
 	{
 		var comboString:String = Std.string(combo);
@@ -1269,7 +1246,6 @@ class PlayState extends MusicBeatState
 
 		for (scoreInt in 0...stringArray.length)
 		{
-			// numScore.loadGraphic(Paths.image('UI/' + pixelModifier + 'num' + stringArray[scoreInt]));
 			var numScore = ForeverAssets.generateCombo('combo', stringArray[scoreInt], (!negative ? allSicks : false), assetModifier, changeableSkin, 'UI', negative, createdColor, scoreInt);
 			numScore.cameras = [camHUD];
 			add(numScore);
@@ -1531,9 +1507,9 @@ class PlayState extends MusicBeatState
 	override function beatHit() {
 		super.beatHit();
 
-		for (cams in [camGame, camHUD]) {
+		for (hud in allUIs) {
 			if (canBeat) {
-				cams.zoom += 0.025;
+				hud.zoom += 0.025;
 			}
 		}
 		

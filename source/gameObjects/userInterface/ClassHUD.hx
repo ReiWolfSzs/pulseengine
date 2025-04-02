@@ -26,9 +26,13 @@ using StringTools;
 
 class ClassHUD extends FlxTypedGroup<FlxBasic>
 {
+	var  game = PlayState;
 	// set up variables and stuff here
 	var scoreBar:FlxText;
 	var scoreLast:Float = -1;
+
+	public var lerpScore:Int = 0;
+	public var intendedScore:Int = 0;
 
 	// fnf mods
 	var scoreDisplay:String = 'beep bop bo skdkdkdbebedeoop brrapadop';
@@ -57,7 +61,7 @@ class ClassHUD extends FlxTypedGroup<FlxBasic>
 		super();
 
 		// Configura a barra de saúde
-		var barY = FlxG.height * 0.85;
+		var barY = FlxG.height * 0.9;
 		if (Init.trueSettings.get('Downscroll')) barY = 64;
 
 		healthBarBG = new FlxSprite(0, barY).loadGraphic(Paths.image(ForeverTools.returnSkinAsset('healthBar', PlayState.assetModifier, PlayState.changeableSkin, 'UI')));
@@ -72,25 +76,26 @@ class ClassHUD extends FlxTypedGroup<FlxBasic>
 
 		// Configura os ícones de saúde
 		iconP1 = new HealthIcon(PlayState.SONG.player1, true);
-		iconP1.y = healthBar.y - 100;
 		add(iconP1);
 
 		iconP2 = new HealthIcon(PlayState.SONG.player2, false);
-		iconP2.y = healthBar.y - 90;
 		add(iconP2);
 
+		for (i in [iconP1, iconP2]) {
+			i.y = healthBarBG.y - 90;
+		}
+
 		// Configura a barra de pontuação
-		scoreBar = new FlxText(690, 653, 0, scoreDisplay);
+		scoreBar = new FlxText(healthBarBG.x + 330, healthBarBG.y + 30, 0, scoreDisplay);
 		scoreBar.setFormat(Paths.font('vcr.ttf'), 16, FlxColor.WHITE);
 		scoreBar.setBorderStyle(OUTLINE, FlxColor.BLACK, 1.2);
 		scoreBar.fieldWidth = 0;
 		updateScoreText();
 		scoreBar.antialiasing = true;
 		add(scoreBar);
-		if (Init.trueSettings.get('Downscroll'))
-			scoreBar.setPosition(490, 29);
+		if (Init.trueSettings.get('Downscroll')) scoreBar.setPosition(490, 29);
 
-		 // Configura o contador de acertos
+		// Configura o contador de acertos
 		if (Init.trueSettings.get('Counter') != 'None')
 		{
 			var judgementNameArray:Array<String> = [];
@@ -115,7 +120,7 @@ class ClassHUD extends FlxTypedGroup<FlxBasic>
 		updateScoreText();
 
 		// Configura o marcador de autoplay
-		autoplayMark = new FlxText(-5, (Init.trueSettings.get('Downscroll') ? -60 : 60), FlxG.width - 800, '[AUTOPLAY]', 32);
+		autoplayMark = new FlxText(-5, (Init.trueSettings.get('Downscroll') ? -60 : 60), FlxG.width - 800, 'BOTPLAY', 32);
 		autoplayMark.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
 		autoplayMark.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
 		autoplayMark.screenCenter(X);
@@ -155,6 +160,10 @@ class ClassHUD extends FlxTypedGroup<FlxBasic>
 		// pain, this is like the 7th attempt
 		healthBar.percent = (PlayState.health * 50);
 
+		intendedScore = game.songScore;
+    	lerpScore = Math.floor(FlxMath.lerp(intendedScore, lerpScore, Math.exp(-elapsed * 14)));
+		scoreBar.text = 'Score: ' +lerpScore;
+
 		var iconLerp = 1 - Main.framerateAdjust(0.15);
 
 		iconP1.updateHitbox();
@@ -184,10 +193,9 @@ class ClassHUD extends FlxTypedGroup<FlxBasic>
 	public function updateScoreText()
 	{
 		var comboDisplay:String = (Timings.comboDisplay != null && Timings.comboDisplay != '' ? ' [${Timings.comboDisplay}]' : '');
-		var gliderTxt = PlayState.songScore;
+		//var gliderTxt = PlayState.songScore;
 
-		scoreBar.text = "Score: " + FlxStringUtil.formatMoney(gliderTxt, false, true);
-		scoreBar.x = Math.floor((FlxG.width / 2) - (scoreBar.width / 2));
+		//scoreBar.text = "Score: " + FlxStringUtil.formatMoney(gliderTxt, false, true);
 
 		// update counter
 		if (Init.trueSettings.get('Counter') != 'None') {

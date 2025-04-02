@@ -1,6 +1,5 @@
 package;
 
-import hxcodec.VideoSprite;
 import lime.app.Application;
 import flixel.effects.particles.FlxEmitter;
 import flixel.math.FlxMath;

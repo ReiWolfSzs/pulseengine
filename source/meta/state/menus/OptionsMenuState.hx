@@ -58,8 +58,7 @@ class OptionsMenuState extends MusicBeatState
 				[
 					['preferences', callNewGroup],
 					['appearance', callNewGroup],
-					['controls', openControlmenu],
-					['exit', exitMenu]
+					['controls', openControlmenu]
 				]
 			],
 			'preferences' => [
@@ -406,19 +405,15 @@ class OptionsMenuState extends MusicBeatState
 					// checkmark basics lol
 					if (controls.ACCEPT)
 					{
-						lockedMovement = true;
-						FlxFlicker.flicker(activeSubgroup.members[curSelection], 0.5, 0.06 * 2, true, false, function(flick:FlxFlicker)
-						{
-							// LMAO THIS IS HUGE
-							Init.trueSettings.set(activeSubgroup.members[curSelection].text,
-								!Init.trueSettings.get(activeSubgroup.members[curSelection].text));
-							updateCheckmark(currentAttachmentMap.get(activeSubgroup.members[curSelection]),
-								Init.trueSettings.get(activeSubgroup.members[curSelection].text));
+						// LMAO THIS IS HUGE
+						Init.trueSettings.set(activeSubgroup.members[curSelection].text,
+							!Init.trueSettings.get(activeSubgroup.members[curSelection].text));
+						updateCheckmark(currentAttachmentMap.get(activeSubgroup.members[curSelection]),
+							Init.trueSettings.get(activeSubgroup.members[curSelection].text));
 
-							// save the setting
-							Init.saveSettings();
-							lockedMovement = false;
-						});
+						// save the setting
+						Init.saveSettings();
+						lockedMovement = false;
 					}
 				case Init.SettingTypes.Selector:
 					#if !html5
@@ -539,10 +534,7 @@ class OptionsMenuState extends MusicBeatState
 		if (controls.ACCEPT)
 		{
 			lockedMovement = true;
-			FlxFlicker.flicker(activeSubgroup.members[curSelection], 0.5, 0.06 * 2, true, false, function(flick:FlxFlicker)
-			{
-				loadSubgroup(activeSubgroup.members[curSelection].text);
-			});
+			loadSubgroup(activeSubgroup.members[curSelection].text);
 		}
 	}
 
@@ -550,27 +542,7 @@ class OptionsMenuState extends MusicBeatState
 	{
 		if (controls.ACCEPT)
 		{
-			lockedMovement = true;
-			FlxFlicker.flicker(activeSubgroup.members[curSelection], 0.5, 0.06 * 2, true, false, function(flick:FlxFlicker)
-			{
-				openSubState(new OptionsSubstate());
-				lockedMovement = false;
-			});
+			openSubState(new OptionsSubstate());
 		}
-	}
-
-	public function exitMenu()
-	{
-		//
-		if (controls.ACCEPT)
-		{
-			lockedMovement = true;
-			FlxFlicker.flicker(activeSubgroup.members[curSelection], 0.5, 0.06 * 2, true, false, function(flick:FlxFlicker)
-			{
-				Main.switchState(this, new MainMenuState());
-				lockedMovement = false;
-			});
-		}
-		//
 	}
 }
