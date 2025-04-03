@@ -965,6 +965,15 @@ class PlayState extends MusicBeatState
 			vocals.volume = 1;
 
 			characterPlayAnimation(coolNote, character);
+			switch (coolNote.noteType) {
+				case 1: 
+					characterPlayAnimation(coolNote, secondOpponent);
+				case 2:
+					characterPlayAnimation(coolNote, secondOpponent);
+					characterPlayAnimation(coolNote, character);
+				default:
+					characterPlayAnimation(coolNote, character);
+			}
 			if (characterStrums.receptors.members[coolNote.noteData] != null)
 				characterStrums.receptors.members[coolNote.noteData].playAnim('confirm', true);
 
