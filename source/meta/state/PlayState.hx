@@ -964,7 +964,6 @@ class PlayState extends MusicBeatState
 			coolNote.wasGoodHit = true;
 			vocals.volume = 1;
 
-			characterPlayAnimation(coolNote, character);
 			switch (coolNote.noteType) {
 				case 1: 
 					characterPlayAnimation(coolNote, secondOpponent);
