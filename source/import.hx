@@ -5,10 +5,11 @@ import flixel.FlxSprite;
 import flixel.math.FlxMath;
 import flixel.tweens.FlxTween;
 
-import hxcodec.VideoSprite;
-
 import meta.state.PlayState;
 import meta.state.TitleState;
+
+import meta.state.charting.ChartingState;
+import gameObjects.AnimationDebug;
 
 import meta.data.Conductor;
 

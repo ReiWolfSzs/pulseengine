@@ -14,7 +14,6 @@ import meta.data.*;
 import meta.data.dependency.FNFSprite;
 import meta.state.PlayState;
 import openfl.utils.Assets as OpenFlAssets;
-import flxanimate.FlxAnimate;
 
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
@@ -184,18 +183,15 @@ class Character extends FNFSprite
 		}
 	}
 
-	override function update(elapsed:Float)
-	{
-		if (!isPlayer)
-		{
-			if (animation.curAnim.name.startsWith('sing'))
-			{
+	override function update(elapsed:Float) {
+		if (!isPlayer) {
+			if (animation.curAnim.name.startsWith('sing')) {
 				holdTimer += elapsed;
 			}
 
 			var dadVar:Float = 4;
-			if (holdTimer >= Conductor.stepCrochet * dadVar * 0.001)
-			{
+
+			if (holdTimer >= Conductor.stepCrochet * dadVar * 0.001) {
 				dance();
 				holdTimer = 0;
 			}
@@ -212,12 +208,8 @@ class Character extends FNFSprite
 		}
 
 		// Post idle animation (think Week 4 and how the player and mom's hair continues to sway after their idle animations are done!)
-		if (animation.curAnim.finished && animation.curAnim.name == 'idle')
-		{
-			// We look for an animation called 'idlePost' to switch to
-			if (animation.getByName('idlePost') != null)
-				// (( WE DON'T USE 'PLAYANIM' BECAUSE WE WANT TO FEED OFF OF THE IDLE OFFSETS! ))
-				animation.play('idlePost', true, false, 0);
+		if (animation.curAnim.finished && animation.curAnim.name == 'idle') {
+			if (animation.getByName('idlePost') != null) animation.play('idlePost', true, false, 0);
 		}
 
 		super.update(elapsed);

@@ -49,14 +49,11 @@
 
 	<!-- _______________________________ Libraries ______________________________ -->
 
-	<haxedev set='webgl' if="html5"/>
-	<haxelib name="hxCodec"/>
 	<haxelib name="flixel"/>
 	<haxelib name="flixel-addons"/>
 	<haxelib name="flixel-ui"/>
 	<haxelib name="discord_rpc" if="DISCORD_RPC"/>
 	<haxelib name="hxcpp-debug-server" if="debug"/>
-	<haxelib name="flxanimate"/>
 
 	<!-- ______________________________ Haxedefines _____________________________ -->
 

@@ -108,7 +108,11 @@ class MainMenuState extends MusicBeatState
 		var controlArray:Array<Bool> = [up, down, up_p, down_p];
 
 		if (FlxG.keys.justPressed.SEVEN) {
-			FlxG.switchState(new meta.state.charting.ChartingState());
+			FlxG.switchState(new ChartingState());
+		}
+
+		if (FlxG.keys.justPressed.EIGHT) {
+			FlxG.switchState(new AnimationDebug());
 		}
 
 		if ((controlArray.contains(true)) && (!selectedSomethin)) {
