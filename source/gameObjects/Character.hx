@@ -92,6 +92,17 @@ class Character extends FNFSprite
 
 				flipX = true;
 				characterData.offsetY = -70;
+			case 'matt':
+				frames = Paths.getSparrowAtlas('characters/matt');
+				animation.addByPrefix('idle', 'idle', 24, false);
+				animation.addByPrefix('singUP', 'up', 24, false);
+				animation.addByPrefix('singLEFT', 'left', 24, false);
+				animation.addByPrefix('singRIGHT', 'right', 24, false);
+				animation.addByPrefix('singDOWN', 'down', 24, false);
+				playAnim('idle');
+
+				characterData.camOffsetX = 250;
+				characterData.camOffsetY = -70;
 			case 'gf':
 				// GIRLFRIEND CODE
 				tex = Paths.getSparrowAtlas('characters/GF_assets');

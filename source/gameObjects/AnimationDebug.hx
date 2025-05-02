@@ -8,6 +8,10 @@ import flixel.addons.display.FlxGridOverlay;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
+import flixel.FlxCamera;
+
+import sys.io.File;
+import sys.io.FileOutput;
 
 class AnimationDebug extends FlxState {
 	var game = PlayState;
@@ -20,6 +24,9 @@ class AnimationDebug extends FlxState {
 	var daAnim:String = 'spooky';
 	var camFollow:FlxObject;
 
+	private var camEditor:FlxCamera;
+	private var camHUD:FlxCamera;
+
 	public function new(daAnim:String = 'spooky') {
 		super();
 		this.daAnim = daAnim;
@@ -28,12 +35,16 @@ class AnimationDebug extends FlxState {
 	override function create() {
 		FlxG.sound.music.stop();
 
+		camHUD = new FlxCamera();
+		camHUD.bgColor.alpha = 0;
+		FlxG.cameras.add(camHUD, false);
+
 		var gridBG:FlxSprite = FlxGridOverlay.create(10, 10);
 		gridBG.scrollFactor.set(0.5, 0.5);
 		add(gridBG);
 
-		char = new Character(true);
-		char.setCharacter(0, 0, 'bf');
+		char = new Character();
+		char.setCharacter(0, 0, 'matt');
 		char.screenCenter();
 		add(char);
 
@@ -46,6 +57,8 @@ class AnimationDebug extends FlxState {
 		textAnim.size = 26;
 		textAnim.scrollFactor.set();
 		add(textAnim);
+
+		textAnim.cameras = [camHUD];
 
 		genBoyOffsets();
 
@@ -66,10 +79,28 @@ class AnimationDebug extends FlxState {
 			text.scrollFactor.set();
 			text.color = FlxColor.BLUE;
 			dumbTexts.add(text);
+			text.cameras = [camHUD];
 
 			if (pushList) animList.push(anim);
 
 			daLoop++;
+		}
+	}
+
+	public static function saveText(path:String, content:String):Void {
+		try {
+			var offset:String = 'Offsets';
+			var file:FileOutput = File.write(Paths.offsetTxt('matt' + offset), false); // false = sobrescreve
+			file.writeString(
+				'idle 0 0\n' +
+				'singLEFT 0 0\n' +
+				'singRIGHT 0 0\n' +
+				'singUP 0 0\n' +
+				'singDOWN 0 0\n'
+			);
+			file.close();
+		} catch (e:Dynamic) {
+			trace("Erro ao salvar o arquivo: " + e);
 		}
 	}
 
@@ -85,8 +116,13 @@ class AnimationDebug extends FlxState {
 			FlxG.switchState(new MainMenuState());
 		}
 
-		if (FlxG.keys.justPressed.E) game.camGame.zoom += 0.25;
-		if (FlxG.keys.justPressed.Q) game.camGame.zoom -= 0.25;
+		if (FlxG.keys.justPressed.CONTROL) {
+			trace('saving offsets = ' + [saveText]);
+			saveText(Paths.offsetTxt(''), 'text');
+		}
+
+		if (FlxG.keys.justPressed.E) FlxG.camera.zoom += 0.25;
+		if (FlxG.keys.justPressed.Q) FlxG.camera.zoom -= 0.25;
 
 		if (FlxG.keys.justPressed.F) char.flipX = !char.flipX;
 
@@ -102,13 +138,9 @@ class AnimationDebug extends FlxState {
 			camFollow.velocity.set();
 		}
 
-		if (FlxG.keys.justPressed.W) {
-			curAnim -= 1;
-		}
+		if (FlxG.keys.justPressed.W) curAnim -= 1;
 
-		if (FlxG.keys.justPressed.S) {
-			curAnim += 1;
-		}
+		if (FlxG.keys.justPressed.S) curAnim += 1;
 
 		if (curAnim < 0) curAnim = animList.length - 1;
 

@@ -93,7 +93,6 @@ class PlayState extends MusicBeatState {
 
 	private static var prevCamFollow:FlxObject;
 
-	public static var removeZoom:Bool = false;
 	private var curSong:String = "";
 	private var gfSpeed:Int = 1;
 
@@ -129,6 +128,7 @@ class PlayState extends MusicBeatState {
 	public static var cameraSpeed:Float = 1;
 
 	public static var defaultCamZoom:Float = 1.05;
+	public static var camZooming:Bool = true;
 
 	public static var forceZoom:Array<Float>;
 
@@ -162,7 +162,6 @@ class PlayState extends MusicBeatState {
 	// stores the last combo objects in an array
 	public static var lastCombo:Array<FlxSprite>;
 
-	//county funkin
 	var eventHandler:Events;
 	public static var lockCamPos:Bool = false;
 	public static var lockFocus:Bool = false;
@@ -587,7 +586,7 @@ class PlayState extends MusicBeatState {
 
 			var easeLerp = 1 - Main.framerateAdjust(0.05);
 			// camera stuffs
-			if (removeZoom) {
+			if (camZooming) {
 				FlxG.camera.zoom = FlxMath.lerp(defaultCamZoom + forceZoom[0], FlxG.camera.zoom, easeLerp);
 			}
 
