@@ -256,7 +256,6 @@ class ChartingState extends MusicBeatState
 
 		var check_voices = new FlxUICheckBox(10, 25, null, null, "Has voice track", 100);
 		check_voices.checked = _song.needsVoices;
-		// _song.needsVoices = check_voices.checked;
 		check_voices.callback = function() {
 			_song.needsVoices = check_voices.checked;
 			trace('CHECKED!');
@@ -367,9 +366,7 @@ class ChartingState extends MusicBeatState
 	var check_changeBPM:FlxUICheckBox;
 	var stepperSectionBPM:FlxUINumericStepper;
 	var check_altAnim:FlxUICheckBox;
-
-	function addSectionUI():Void
-	{
+	function addSectionUI():Void {
 		var tab_group_section = new FlxUI(null, UI_box);
 		tab_group_section.name = 'Section';
 
@@ -400,7 +397,6 @@ class ChartingState extends MusicBeatState
 		check_mustHitSection = new FlxUICheckBox(10, 30, null, null, "Must hit section", 100);
 		check_mustHitSection.name = 'check_mustHit';
 		check_mustHitSection.checked = true;
-		// _song.needsVoices = check_mustHit.checked;
 
 		check_mustSecondOpponentSection = new FlxUICheckBox(150, 30, null, null, "Must hit second opponent", 100);
 		check_mustSecondOpponentSection.name = 'check_mustSecondOpponent';
@@ -450,24 +446,14 @@ class ChartingState extends MusicBeatState
 		tab_group_note.add(stepperSusLength);
 		tab_group_note.add(applyLength);
 
-		/*
-		// note types
-		stepperType = new FlxUINumericStepper(10, 30, Conductor.stepCrochet / 125, 0, 0, (Conductor.stepCrochet / 125) + 10); // 10 is placeholder
-		// I have no idea what i'm doing lmfao
-		stepperType.value = 0;
-		stepperType.name = 'note_type';
-		*/
-
 		dropDownType = new FlxUIDropDownMenu(10, 30, FlxUIDropDownMenu.makeStrIdLabelArray(noteTypes, true), function(type:String) {
 			curNoteType = Std.parseInt(type);
 		});
 
-		//tab_group_note.add(stepperType);
 		tab_group_note.add(dropDownType);
 		tab_group_note.add(disableAutoScrolling);
 
 		UI_box.addGroup(tab_group_note);
-		// I'm genuinely tempted to go around and remove every instance of the word "sus" it is genuinely killing me inside
 	}
 
 	var songMusic:FlxSound;
@@ -531,30 +517,25 @@ class ChartingState extends MusicBeatState
 			var nums:FlxUINumericStepper = cast sender;
 			var wname = nums.name;
 			FlxG.log.add(wname);
-			// ew what was this before? made it switch cases instead of else if
 			switch (wname) {
 				case 'section_length':
-					_song.notes[curSection].lengthInSteps = Std.int(nums.value); // change length
-					//updateGrid(); // vrrrrmmm
+					_song.notes[curSection].lengthInSteps = Std.int(nums.value);
 				case 'song_speed':
-					_song.speed = nums.value; // change the song speed
+					_song.speed = nums.value;
 				case 'song_bpm':
 					tempBpm = Std.int(nums.value);
 					Conductor.mapBPMChanges(_song);
 					Conductor.changeBPM(Std.int(nums.value));
-				case 'note_susLength': // STOP POSTING ABOUT AMONG US
-					curSelectedNote[2] = nums.value; // change the currently selected note's length
-					updateGrid(); // oh btw I know sus stands for sustain it just bothers me
+				case 'note_susLength':
+					curSelectedNote[2] = nums.value;
+					updateGrid();
 				case 'note_type':
-					curNoteType = Std.int(nums.value); // oh yeah dont forget this has to be an integer
-				// set the new note type for when placing notes next!
+					curNoteType = Std.int(nums.value);
 				case 'section_bpm':
-					_song.notes[curSection].bpm = Std.int(nums.value); // redefine the section's bpm
-					updateGrid(); // update the note grid
+					_song.notes[curSection].bpm = Std.int(nums.value);
+					updateGrid();
 			}
 		}
-
-		// FlxG.log.add(id + " WEED " + sender + " WEED " + data + " WEED " + params);
 	}
 
 	var updatedSection:Bool = false;
@@ -584,7 +565,6 @@ class ChartingState extends MusicBeatState
 		Conductor.songPosition = songMusic.time;
 		_song.song = typingShit.text;
 
-		// real thanks for the help with this ShadowMario, you are the best -Ghost
 		var playedSound:Array<Bool> = [];
 		for (i in 0...8) {
 			playedSound.push(false);
@@ -603,11 +583,7 @@ class ChartingState extends MusicBeatState
 
 		strumLine.y = getYfromStrum((Conductor.songPosition - sectionStartTime()) % (Conductor.stepCrochet * _song.notes[curSection].lengthInSteps));
 		if (curBeat % 4 == 0 && curStep >= 16 * (curSection + 1)) {
-			//trace(curStep);
-			//trace((_song.notes[curSection].lengthInSteps) * (curSection + 1));
-			//trace('DUMBSHIT');
 			changeSection(curSection + 1, false);
-
 			if (_song.notes[curSection + 1] == null) {
 				addSection();
 			}
@@ -825,7 +801,6 @@ class ChartingState extends MusicBeatState
 		waveformPrinted = false;
 
 		if(!FlxG.save.data.chart_waveformInst && !FlxG.save.data.chart_waveformVoices) {
-			//trace('Epic fail on the waveform lol');
 			return;
 		}
 
@@ -874,7 +849,6 @@ class ChartingState extends MusicBeatState
 			}
 		}
 
-		// Draws
 		var gSize:Int = Std.int(GRID_SIZE * 8);
 		var hSize:Int = Std.int(gSize / 2);
 
@@ -1061,7 +1035,6 @@ class ChartingState extends MusicBeatState
 		songMusic.pause();
 		vocals.pause();
 
-		// Basically old shit from changeSection???
 		songMusic.time = sectionStartTime();
 
 		if (songBeginning) {
@@ -1077,7 +1050,6 @@ class ChartingState extends MusicBeatState
 	}
 
 	function changeSection(sec:Int = 0, ?updateMusic:Bool = true):Void {
-		//trace('changing section' + sec);
 		if (_song.notes[sec] != null) {
 			curSection = sec;
 			updateGrid();
@@ -1158,7 +1130,6 @@ class ChartingState extends MusicBeatState
 			Conductor.changeBPM(_song.notes[curSection].bpm);
 			FlxG.log.add('CHANGED BPM!');
 		} else {
-			// get last bpm
 			var daBPM:Float = _song.bpm;
 			for (i in 0...curSection) {
 				if (_song.notes[i].changeBPM) {
@@ -1199,7 +1170,6 @@ class ChartingState extends MusicBeatState
 				noteTypeTxt.x = note.x + (GRID_SIZE / 2) - (noteTypeTxt.width / 2);
 				noteTypeTxt.y = note.y + (GRID_SIZE / 2) - (noteTypeTxt.height / 2);
 				curRenderedNoteTypes.add(noteTypeTxt);
-				//trace('note type: ' + daNoteType);
 			}
 
 			if (daSus > 0) {
@@ -1278,9 +1248,6 @@ class ChartingState extends MusicBeatState
 		if (FlxG.keys.pressed.CONTROL) {
 			_song.notes[curSection].sectionNotes.push([noteStrum, (noteData + 4) % 8, noteSus, noteType]);
 		}
-
-		//trace(noteStrum);
-		//trace(curSection);
 
 		updateGrid();
 		updateNoteUI();
