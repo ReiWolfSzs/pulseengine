@@ -145,7 +145,6 @@ class PlayState extends MusicBeatState {
 	public static var uiHUD:ClassHUD;
 
 	public static var daPixelZoom:Float = 6;
-	public static var determinedChartType:String = "";
 
 	// strumlines
 	public static var dadStrums:Strumline;
@@ -702,7 +701,7 @@ class PlayState extends MusicBeatState {
 								if (daNote.endHoldOffset == Math.NEGATIVE_INFINITY) {
 									// set the end hold offset yeah I hate that I fix this like this
 									daNote.endHoldOffset = (daNote.prevNote.y - (daNote.y + daNote.height));
-									trace(daNote.endHoldOffset);
+									//trace(daNote.endHoldOffset);
 								} else {
 									daNote.y += daNote.endHoldOffset;
 								}
@@ -762,7 +761,7 @@ class PlayState extends MusicBeatState {
 									if (!parentNote.tooLate) {
 										var breakFromLate:Bool = false;
 										for (note in parentNote.childrenNotes) {
-											trace('hold amount ${parentNote.childrenNotes.length}, note is late?' + note.tooLate + ', ' + breakFromLate);
+											//trace('hold amount ${parentNote.childrenNotes.length}, note is late?' + note.tooLate + ', ' + breakFromLate);
 											if (note.tooLate && !note.wasGoodHit) breakFromLate = true;
 										}
 
@@ -1264,7 +1263,7 @@ class PlayState extends MusicBeatState {
 	function sortByShit(Obj1:Note, Obj2:Note):Int return FlxSort.byValues(FlxSort.ASCENDING, Obj1.strumTime, Obj2.strumTime);
 
 	function resyncVocals():Void {
-		trace('resyncing vocal time ${vocals.time}');
+		//trace('resyncing vocal time ${vocals.time}');
 		vocals.pause();
 		songMusic.play();
 		Conductor.songPosition = songMusic.time;
@@ -1273,7 +1272,7 @@ class PlayState extends MusicBeatState {
 			vocals.time = Conductor.songPosition;
 		}
 		vocals.play();
-		trace('new vocal time ${Conductor.songPosition}');
+		//trace('new vocal time ${Conductor.songPosition}');
 	}
 
 	override function stepHit() {

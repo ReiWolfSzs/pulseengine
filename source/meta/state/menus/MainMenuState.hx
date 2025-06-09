@@ -70,7 +70,7 @@ class MainMenuState extends MusicBeatState
 		// loop through the menu options
 		for (i in 0...optionShit.length) {
 			var menuItem:FlxSprite = new FlxSprite(0, 80 + (i * 200));
-			menuItem.frames = Paths.getSparrowAtlas('menus/base/title/FNF_main_menu_assets');
+			menuItem.frames = Paths.getSparrowAtlas('menus/base/FNF_main_menu_assets');
 			menuItem.animation.addByPrefix('idle', optionShit[i] + " basic", 24);
 			menuItem.animation.addByPrefix('selected', optionShit[i] + " white", 24);
 			menuItem.animation.play('idle');
@@ -152,7 +152,7 @@ class MainMenuState extends MusicBeatState
 						switch (daChoice) {
 							case 'story mode':
 								FlxG.switchState(new FreeplayState());
-								//Flx.switchState(new CachingState(songList[selection]));
+								//FlxG.switchState(new CachingState(songList[selection]));
 							case 'freeplay':
 								FlxG.switchState(new FreeplayState());
 							case 'options':

@@ -200,12 +200,10 @@ class OptionsMenuState extends MusicBeatState
 			selectOption(curSelection + directionIncrement, false);
 	}
 
-	function setAttachmentAlpha(attachment:FlxSprite, newAlpha:Float)
-	{
+	function setAttachmentAlpha(attachment:FlxSprite, newAlpha:Float) {
 		// oddly enough, you can't set alphas of objects that arent directly and inherently defined as a value.
 		// ya flixel is weird lmao
-		if (attachment != null)
-			attachment.alpha = newAlpha;
+		if (attachment != null) attachment.alpha = newAlpha;
 		// therefore, I made a script to circumvent this by defining the attachment with the `attachment` variable!
 		// pretty neat, huh?
 	}
@@ -215,31 +213,26 @@ class OptionsMenuState extends MusicBeatState
 	var textValue:String = '';
 	var infoTimer:FlxTimer;
 
-	override public function update(elapsed:Float)
-	{
+	override public function update(elapsed:Float) {
 		super.update(elapsed);
 
 		// just uses my outdated code for the main menu state where I wanted to implement
 		// hold scrolling but I couldnt because I'm dumb and lazy
-		if (!lockedMovement)
-		{
+		if (!lockedMovement) {
 			// check for the current selection
-			if (curSelectedScript != null)
-				curSelectedScript();
+			if (curSelectedScript != null) curSelectedScript();
 
 			updateSelections();
 		}
 
-		if (Init.gameSettings.get(activeSubgroup.members[curSelection].text) != null)
-		{
+		if (Init.gameSettings.get(activeSubgroup.members[curSelection].text) != null) {
 			// lol had to set this or else itd tell me expected }
 			var currentSetting = Init.gameSettings.get(activeSubgroup.members[curSelection].text);
 			var textValue = currentSetting[2];
 			if (textValue == null)
 				textValue = "";
 
-			if (finalText != textValue)
-			{
+			if (finalText != textValue) {
 				// trace('call??');
 				// trace(textValue);
 				regenInfoText();
@@ -249,9 +242,7 @@ class OptionsMenuState extends MusicBeatState
 				textSplit = finalText.split("");
 
 				var loopTimes = 0;
-				infoTimer = new FlxTimer().start(0.025, function(tmr:FlxTimer)
-				{
-					//
+				infoTimer = new FlxTimer().start(0.025, function(tmr:FlxTimer) {
 					infoText.text += textSplit[loopTimes];
 					infoText.screenCenter(X);
 
@@ -261,71 +252,52 @@ class OptionsMenuState extends MusicBeatState
 		}
 
 		// move the attachments if there are any
-		for (setting in currentAttachmentMap.keys())
-		{
-			if ((setting != null) && (currentAttachmentMap.get(setting) != null))
-			{
+		for (setting in currentAttachmentMap.keys()) {
+			if ((setting != null) && (currentAttachmentMap.get(setting) != null)) {
 				var thisAttachment = currentAttachmentMap.get(setting);
 				thisAttachment.x = setting.x - 100;
 				thisAttachment.y = setting.y - 50;
 			}
 		}
 
-		if (controls.BACK)
-		{
-			if (curCategory != 'main')
-				loadSubgroup('main');
-			else
-				Main.switchState(this, new MainMenuState());
+		if (controls.BACK) {
+			if (curCategory != 'main') loadSubgroup('main');
+			else Main.switchState(this, new MainMenuState());
 		}
 	}
 
-	private function regenInfoText()
-	{
-		if (infoTimer != null)
-			infoTimer.cancel();
-		if (infoText != null)
-			infoText.text = "";
+	private function regenInfoText() {
+		if (infoTimer != null) infoTimer.cancel();
+		if (infoText != null) infoText.text = "";
 	}
 
-	function updateSelections()
-	{
+	function updateSelections() {
 		var up = controls.UI_UP;
 		var down = controls.UI_DOWN;
 		var up_p = controls.UI_UP_P;
 		var down_p = controls.UI_DOWN_P;
 		var controlArray:Array<Bool> = [up, down, up_p, down_p];
 
-		if (controlArray.contains(true))
-		{
-			for (i in 0...controlArray.length)
-			{
+		if (controlArray.contains(true)) {
+			for (i in 0...controlArray.length) {
 				// here we check which keys are pressed
-				if (controlArray[i] == true)
-				{
+				if (controlArray[i] == true) {
 					// if single press
-					if (i > 1)
-					{
+					if (i > 1) {
 						// up is 2 and down is 3
 						// paaaaaiiiiiiinnnnn
-						if (i == 2)
-							selectOption(curSelection - 1);
-						else if (i == 3)
-							selectOption(curSelection + 1);
+						if (i == 2) selectOption(curSelection - 1);
+						else if (i == 3) selectOption(curSelection + 1);
 					}
 				}
-				//
 			}
 		}
 	}
 
-	private function returnSubgroup(groupName:String):FlxTypedGroup<Alphabet>
-	{
-		//
+	private function returnSubgroup(groupName:String):FlxTypedGroup<Alphabet> {
 		var newGroup:FlxTypedGroup<Alphabet> = new FlxTypedGroup<Alphabet>();
 
-		for (i in 0...categoryMap.get(groupName)[0].length)
-		{
+		for (i in 0...categoryMap.get(groupName)[0].length) {
 			if (Init.gameSettings.get(categoryMap.get(groupName)[0][i][0]) == null
 				|| Init.gameSettings.get(categoryMap.get(groupName)[0][i][0])[3] != Init.FORCED)
 			{
@@ -341,19 +313,14 @@ class OptionsMenuState extends MusicBeatState
 				newGroup.add(thisOption);
 			}
 		}
-
 		return newGroup;
 	}
 
-	private function returnExtrasMap(alphabetGroup:FlxTypedGroup<Alphabet>):Map<Alphabet, Dynamic>
-	{
+	private function returnExtrasMap(alphabetGroup:FlxTypedGroup<Alphabet>):Map<Alphabet, Dynamic> {
 		var extrasMap:Map<Alphabet, Dynamic> = new Map<Alphabet, Dynamic>();
-		for (letter in alphabetGroup)
-		{
-			if (Init.gameSettings.get(letter.text) != null)
-			{
-				switch (Init.gameSettings.get(letter.text)[1])
-				{
+		for (letter in alphabetGroup) {
+			if (Init.gameSettings.get(letter.text) != null) {
+				switch (Init.gameSettings.get(letter.text)[1]) {
 					case Init.SettingTypes.Checkmark:
 						// checkmark
 						var checkmark = ForeverAssets.generateCheckmark(10, letter.y, 'checkboxThingie', 'base', 'default', 'UI');
@@ -369,7 +336,6 @@ class OptionsMenuState extends MusicBeatState
 					default:
 						// dont do ANYTHING
 				}
-				//
 			}
 		}
 
@@ -379,16 +345,12 @@ class OptionsMenuState extends MusicBeatState
 	/*
 		This is the base option return
 	 */
-	public function getFromOption()
-	{
-		if (Init.gameSettings.get(activeSubgroup.members[curSelection].text) != null)
-		{
-			switch (Init.gameSettings.get(activeSubgroup.members[curSelection].text)[1])
-			{
+	public function getFromOption() {
+		if (Init.gameSettings.get(activeSubgroup.members[curSelection].text) != null) {
+			switch (Init.gameSettings.get(activeSubgroup.members[curSelection].text)[1]) {
 				case Init.SettingTypes.Checkmark:
 					// checkmark basics lol
-					if (controls.ACCEPT)
-					{
+					if (controls.ACCEPT) {
 						// LMAO THIS IS HUGE
 						Init.trueSettings.set(activeSubgroup.members[curSelection].text,
 							!Init.trueSettings.get(activeSubgroup.members[curSelection].text));
@@ -403,15 +365,11 @@ class OptionsMenuState extends MusicBeatState
 					#if !html5
 					var selector:Selector = currentAttachmentMap.get(activeSubgroup.members[curSelection]);
 
-					if (!controls.UI_LEFT)
-						selector.selectorPlay('left');
-					if (!controls.UI_RIGHT)
-						selector.selectorPlay('right');
+					if (!controls.UI_LEFT) selector.selectorPlay('left');
+					if (!controls.UI_RIGHT) selector.selectorPlay('right');
 
-					if (controls.UI_RIGHT_P)
-						updateSelector(selector, 1);
-					else if (controls.UI_LEFT_P)
-						updateSelector(selector, -1);
+					if (controls.UI_RIGHT_P) updateSelector(selector, 1);
+					else if (controls.UI_LEFT_P) updateSelector(selector, -1);
 					#end
 				default:
 					// none
@@ -419,32 +377,25 @@ class OptionsMenuState extends MusicBeatState
 		}
 	}
 
-	function updateCheckmark(checkmark:FNFSprite, animation:Bool)
-	{
-		if (checkmark != null)
-			checkmark.playAnim(Std.string(animation));
+	function updateCheckmark(checkmark:FNFSprite, animation:Bool) {
+		if (checkmark != null) checkmark.playAnim(Std.string(animation));
 	}
 
-	function updateSelector(selector:Selector, updateBy:Int)
-	{
+	function updateSelector(selector:Selector, updateBy:Int) {
 		var fps = selector.fpsCap;
 		var bgdark = selector.darkBG;
-		if (fps)
-		{
+		if (fps) {
 			// bro I dont even know if the engine works in html5 why am I even doing this
 			// lazily hardcoded fps cap
 			var originalFPS = Init.trueSettings.get(activeSubgroup.members[curSelection].text);
 			var increase = 15 * updateBy;
-			if (originalFPS + increase < 30)
-				increase = 0;
+			if (originalFPS + increase < 30) increase = 0;
+			
 			// high fps cap
-			if (originalFPS + increase > 360)
-				increase = 0;
+			if (originalFPS + increase > 360) increase = 0;
 
-			if (updateBy == -1)
-				selector.selectorPlay('left', 'press');
-			else
-				selector.selectorPlay('right', 'press');
+			if (updateBy == -1) selector.selectorPlay('left', 'press');
+			else selector.selectorPlay('right', 'press');
 
 			FlxG.sound.play(Paths.sound('system/scroll'), 0.4);
 
@@ -453,22 +404,17 @@ class OptionsMenuState extends MusicBeatState
 			selector.optionChosen.text = Std.string(originalFPS);
 			Init.trueSettings.set(activeSubgroup.members[curSelection].text, originalFPS);
 			Init.saveSettings();
-		}
-		else if (bgdark)
-		{
+		} else if (bgdark) {
 			// lazily hardcoded darkness cap
 			var originaldark = Init.trueSettings.get(activeSubgroup.members[curSelection].text);
 			var increase = 5 * updateBy;
-			if (originaldark + increase < 0)
-				increase = 0;
+			if (originaldark + increase < 0) increase = 0;
+			
 			// high darkness cap
-			if (originaldark + increase > 100)
-				increase = 0;
+			if (originaldark + increase > 100) increase = 0;
 
-			if (updateBy == -1)
-				selector.selectorPlay('left', 'press');
-			else
-				selector.selectorPlay('right', 'press');
+			if (updateBy == -1) selector.selectorPlay('left', 'press');
+			else selector.selectorPlay('right', 'press');
 
 			FlxG.sound.play(Paths.sound('system/scroll'), 0.4);
 
@@ -477,18 +423,13 @@ class OptionsMenuState extends MusicBeatState
 			selector.optionChosen.text = Std.string(originaldark);
 			Init.trueSettings.set(activeSubgroup.members[curSelection].text, originaldark);
 			Init.saveSettings();
-		}
-		else if (!fps && !bgdark)
-		{
+		} else if (!fps && !bgdark) {
 			// get the current option as a number
 			var storedNumber:Int = 0;
 			var newSelection:Int = storedNumber;
-			if (selector.options != null)
-			{
-				for (curOption in 0...selector.options.length)
-				{
-					if (selector.options[curOption] == selector.optionChosen.text)
-						storedNumber = curOption;
+			if (selector.options != null) {
+				for (curOption in 0...selector.options.length) {
+					if (selector.options[curOption] == selector.optionChosen.text) storedNumber = curOption;
 				}
 
 				newSelection = storedNumber + updateBy;
@@ -498,10 +439,8 @@ class OptionsMenuState extends MusicBeatState
 					newSelection = 0;
 			}
 
-			if (updateBy == -1)
-				selector.selectorPlay('left', 'press');
-			else
-				selector.selectorPlay('right', 'press');
+			if (updateBy == -1) selector.selectorPlay('left', 'press');
+			else selector.selectorPlay('right', 'press');
 
 			FlxG.sound.play(Paths.sound('system/scroll'), 0.4);
 
@@ -513,20 +452,26 @@ class OptionsMenuState extends MusicBeatState
 		}
 	}
 
-	public function callNewGroup()
-	{
-		if (controls.ACCEPT)
-		{
+	public function callNewGroup() {
+		if (controls.ACCEPT) {
+			FlxG.sound.play(Paths.sound('system/confirm'));
+
 			lockedMovement = true;
-			loadSubgroup(activeSubgroup.members[curSelection].text);
+			FlxFlicker.flicker(activeSubgroup.members[curSelection], 0.5, 0.06 * 2, true, false, function(flick:FlxFlicker){
+				loadSubgroup(activeSubgroup.members[curSelection].text);
+			});
 		}
 	}
 
-	public function openControlmenu()
-	{
-		if (controls.ACCEPT)
-		{
-			openSubState(new OptionsSubstate());
+	public function openControlmenu() {
+		if (controls.ACCEPT) {
+			FlxG.sound.play(Paths.sound('system/confirm'));
+
+			lockedMovement = true;
+			FlxFlicker.flicker(activeSubgroup.members[curSelection], 0.5, 0.06 * 2, true, false, function(flick:FlxFlicker) {
+				openSubState(new OptionsSubstate());
+				lockedMovement = false;
+			});
 		}
 	}
 }

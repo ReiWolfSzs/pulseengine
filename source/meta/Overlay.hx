@@ -2,68 +2,108 @@ package meta;
 
 import haxe.Timer;
 import openfl.events.Event;
-import openfl.system.System;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
+import flixel.math.FlxMath;
+#if gl_stats
+import openfl.display._internal.stats.Context3DStats;
+import openfl.display._internal.stats.DrawCallContext;
+#end
+#if flash
+import openfl.Lib;
+#end
+
+#if openfl
+import openfl.system.System;
+#end
 
 /**
-	Overlay that displays FPS and memory usage.
-
-	Based on this tutorial:
-	https://keyreal-code.github.io/haxecoder-tutorials/17_displaying_fps_and_memory_usage_using_openfl.html
+	The FPS class provides an easy-to-use monitor to display
+	the current frame rate of an OpenFL project
 **/
-class Overlay extends TextField
-{
-	var times:Array<Float> = [];
+#if !openfl_debug
+@:fileXml('tags="haxe,release"')
+@:noDebug
+#end
+class Overlay extends TextField {
+	/**
+		The current frame rate, expressed using frames-per-second
+	**/
+	public var currentFPS(default, null):Int;
 
-	// display info
-	static var displayFps = true;
+	@:noCompletion private var cacheCount:Int;
+	@:noCompletion private var currentTime:Float;
+	@:noCompletion private var times:Array<Float>;
 
-	public function new(x:Float, y:Float)
+	public function new(x:Float = 100, y:Float = 70, color:Int = 0x000000)
 	{
 		super();
 
 		this.x = x;
-		this.y = x;
+		this.y = y;
 
-		autoSize = LEFT;
+		currentFPS = 0;
 		selectable = false;
+		mouseEnabled = false;
+		defaultTextFormat = new TextFormat("_sans", 14, color);
+		autoSize = LEFT;
+		multiline = true;
+		text = "FPS: ";
 
-		defaultTextFormat = new TextFormat(Paths.font("vcr.ttf"), 12, 0xFFFFFF);
-		text = "";
+		cacheCount = 0;
+		currentTime = 0;
+		times = [];
 
-		addEventListener(Event.ENTER_FRAME, update);
-	}
-
-	static final intervalArray:Array<String> = ['B', 'KB', 'MB', 'GB', 'TB'];
-
-	public static function getInterval(num:UInt):String
-	{
-		var size:Float = num;
-		var data = 0;
-		while (size > 1000 && data < intervalArray.length - 1)
+		#if flash
+		addEventListener(Event.ENTER_FRAME, function(e)
 		{
-			data++;
-			size = size / 1000;
-		}
-
-		size = Math.round(size * 100) / 100;
-		return size + " " + intervalArray[data];
+			var time = Lib.getTimer();
+			__enterFrame(time - currentTime);
+		});
+		#end
 	}
 
-	function update(_:Event)
+	// Event Handlers
+	@:noCompletion
+	private #if !flash override #end function __enterFrame(deltaTime:Float):Void
 	{
-		var now:Float = Timer.stamp();
-		times.push(now);
-		while (times[0] < now - 1)
+		currentTime += deltaTime;
+		times.push(currentTime);
+
+		while (times[0] < currentTime - 1000)
+		{
 			times.shift();
-
-		if (visible) {
-			text = '' + (displayFps ? times.length + " FPS\n" : ''); // Current and Total Memory Usage
 		}
-	}
 
-	public static function updateDisplayInfo(shouldDisplayFps:Bool) {
-		displayFps = shouldDisplayFps;
+		var currentCount = times.length;
+		currentFPS = Math.round((currentCount + cacheCount) / 2);
+		if (currentFPS > Main.framerate) currentFPS = Main.framerate;
+
+		if (currentCount != cacheCount /*&& visible*/)
+		{
+			text = "FPS: " + currentFPS;
+			var memoryMegas:Float = 0;
+			
+			#if openfl
+			memoryMegas = Math.abs(FlxMath.roundDecimal(System.totalMemory / 1000000, 1));
+			text += " / Memory: " + memoryMegas + " MB";
+			#end
+
+			textColor = 0xFFFFFFFF;
+			if (memoryMegas > 3000 || currentFPS <= Main.framerate / 2)
+			{
+				textColor = 0xFFFF0000;
+			}
+
+			#if (gl_stats && !disable_cffi && (!html5 || !canvas))
+			text += "\ntotalDC: " + Context3DStats.totalDrawCalls();
+			text += "\nstageDC: " + Context3DStats.contextDrawCalls(DrawCallContext.STAGE);
+			text += "\nstage3DDC: " + Context3DStats.contextDrawCalls(DrawCallContext.STAGE3D);
+			#end
+
+			text += "\n";
+		}
+
+		cacheCount = currentCount;
 	}
 }

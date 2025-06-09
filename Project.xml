@@ -4,9 +4,9 @@
 	<!-- _________________________ Application Settings _________________________ -->
 
 	<app 
-		title="Friday Night Funkin'" file="Executable"
-		packageName="com.rei" package="com.rei"
-		main="Main" version="1.0" company="Rei"
+		title="Friday Night Funkin': ScalEngine" file="ScalEngine"
+		packageName="Hitoshy" package="Hitoshy"
+		main="Main" version="0.0.1" company="Hitoshy"
 	/>
 
 	<app preloader="flixel.system.FlxPreloader" />
