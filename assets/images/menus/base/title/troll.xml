@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="troll.png">
+	<SubTexture name="t0001" x="100" y="100" width="640" height="360"/>
+	<SubTexture name="t0010" x="840" y="100" width="640" height="360"/>
+	<SubTexture name="t0002" x="1580" y="100" width="640" height="360"/>
+	<SubTexture name="t0003" x="2320" y="100" width="640" height="360"/>
+	<SubTexture name="t0004" x="3060" y="100" width="640" height="360"/>
+	<SubTexture name="t0005" x="100" y="560" width="640" height="360"/>
+	<SubTexture name="t0006" x="840" y="560" width="640" height="360"/>
+	<SubTexture name="t0007" x="1580" y="560" width="640" height="360"/>
+	<SubTexture name="t0008" x="2320" y="560" width="640" height="360"/>
+	<SubTexture name="t0009" x="3060" y="560" width="640" height="360"/>
+	<SubTexture name="s0001" x="3060" y="100" width="640" height="360"/>
+	
+</TextureAtlas>

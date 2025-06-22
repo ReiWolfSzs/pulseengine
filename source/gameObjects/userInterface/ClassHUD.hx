@@ -55,7 +55,7 @@ class ClassHUD extends FlxTypedGroup<FlxBasic>
 		healthBarBG.scale.set(1.5, 1);
 		add(healthBarBG);
 
-		healthBar = new FlxBar(healthBarBG.x + 4, healthBarBG.y + 4, RIGHT_TO_LEFT, Std.int(healthBarBG.width - 8), Std.int(healthBarBG.height - 8));
+		healthBar = new FlxBar(healthBarBG.x + 36, healthBarBG.y + 5, RIGHT_TO_LEFT, Std.int(360), Std.int(9));
 		healthBar.createFilledBar(0xFFFF0000, 0xFF00FF00);
 		healthBar.scale.set(1.5, 1);
 		add(healthBar);
