@@ -24,7 +24,7 @@ haxelib set flixel-addons 3.3.0
 haxelib set flixel-ui 2.6.1
 haxelib set hxcpp-debug-server 1.2.4
 haxelib set lime 8.1.2
-haxelib set openfl 9.3.3
+haxelib set openfl 9.3.0
 haxelib set hxcpp 4.3.2
 
 title Forever Engine Setup - Installing Additional Libraries

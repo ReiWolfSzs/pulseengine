@@ -15,6 +15,7 @@ import openfl.system.System;
 import openfl.utils.AssetType;
 import openfl.utils.Assets as OpenFlAssets;
 
+using StringTools;
 
 class Paths {
 	// Here we set up the paths class. This will be used to
@@ -205,6 +206,14 @@ class Paths {
 
 	inline static public function json(key:String, ?library:String) {
 		return getPath('songs/$key.json', TEXT, library);
+	}
+
+	inline static public function formatToSongPath(path:String) {
+		var invalidChars = ~/[~&\\;:<>#]/;
+		var hideChars = ~/[.,'"%?!]/;
+
+		var path = invalidChars.split(path.replace(' ', '-')).join("-");
+		return hideChars.split(path).join("").toLowerCase();
 	}
 
 	inline static public function songJson(song:String, secondSong:String, ?library:String)

@@ -28,6 +28,11 @@ class Note extends FNFSprite
 	public var wasGoodHit:Bool = false;
 	public var prevNote:Note;
 
+	public var eventName:String = '';
+	public var eventLength:Int = 0;
+	public var eventVal1:String = '';
+	public var eventVal2:String = '';
+
 	public var sustainLength:Float = 0;
 	public var isSustainNote:Bool = false;
 
@@ -71,8 +76,6 @@ class Note extends FNFSprite
 		if (isSustainNote && prevNote != null)
 		{
 			parentNote = prevNote;
-			while (parentNote.parentNote != null)
-				parentNote = parentNote.parentNote;
 			parentNote.childrenNotes.push(this);
 		}
 		else if (!isSustainNote)

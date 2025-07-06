@@ -12,6 +12,7 @@ import sys.FileSystem;
 class CoolUtil
 {
 	public static var difficultyArray:Array<String> = ['EASY', "NORMAL", "HARD", "ERECT", "PICO"];
+	public static var defaultDifficulty:String = "HARD";
 	public static var difficultyLength = difficultyArray.length;
 
 	public static function difficultyFromNumber(number:Int):String
@@ -32,6 +33,13 @@ class CoolUtil
 	public static function swapSpaceDash(string:String):String
 	{
 		return StringTools.contains(string, '-') ? dashToSpace(string) : spaceToDash(string);
+	}
+
+	inline public static function quantize(f:Float, snap:Float){
+		// changed so this actually works lol
+		var m:Float = Math.fround(f * snap);
+		trace(snap);
+		return (m / snap);
 	}
 
 	public static function coolTextFile(path:String):Array<String>

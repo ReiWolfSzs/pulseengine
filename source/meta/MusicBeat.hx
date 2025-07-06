@@ -28,6 +28,8 @@ class MusicBeatState extends FNFUIState
 	public var curStep:Int = 0;
 	public var curBeat:Int = 0;
 
+	private var curDecStep:Float = 0;
+	private var curDecBeat:Float = 0;
 	private var controls(get, never):Controls;
 
 	inline function get_controls():Controls
@@ -90,6 +92,7 @@ class MusicBeatState extends FNFUIState
 	public function updateBeat():Void
 	{
 		curBeat = Math.floor(curStep / 4);
+		curDecBeat = curDecStep/4;
 	}
 
 	public function updateCurStep():Void
@@ -105,7 +108,10 @@ class MusicBeatState extends FNFUIState
 				lastChange = Conductor.bpmChangeMap[i];
 		}
 
-		curStep = lastChange.stepTime + Math.floor((Conductor.songPosition - lastChange.songTime) / Conductor.stepCrochet);
+
+		var shit = (Conductor.songPosition - lastChange.songTime) / Conductor.stepCrochet;
+		curDecStep = lastChange.stepTime + shit;
+		curStep = lastChange.stepTime + Math.floor(shit);
 	}
 
 	public static function switchState(nextState:FlxState) {
@@ -129,6 +135,10 @@ class MusicBeatState extends FNFUIState
 		}
 		FlxTransitionableState.skipNextTransIn = false;
 		FlxG.switchState(nextState);
+	}
+
+	public static function resetState() {
+		MusicBeatState.switchState(FlxG.state);
 	}
 
 	public function stepHit():Void

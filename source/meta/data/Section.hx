@@ -2,6 +2,7 @@ package meta.data;
 
 typedef SwagSection =
 {
+	var sectionBeats:Int;
 	var sectionNotes:Array<Dynamic>;
 	var gfSection:Bool;
 	var lengthInSteps:Int;
@@ -15,6 +16,7 @@ typedef SwagSection =
 
 class Section
 {
+	public var sectionBeats:Int = 4;
 	public var sectionNotes:Array<Dynamic> = [];
 	public var gfSection:Bool = false;
 	public var lengthInSteps:Int = 16;

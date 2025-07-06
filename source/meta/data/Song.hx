@@ -12,6 +12,7 @@ typedef SwagSong =
 {
 	var song:String;
 	var notes:Array<SwagSection>;
+	var events:Array<Dynamic>;
 	var bpm:Float;
 	var needsVoices:Bool;
 	var speed:Float;
@@ -22,6 +23,7 @@ typedef SwagSong =
 	var gfVersion:String;
 	var stage:String;
 	var noteSkin:String;
+	var splashSkin:String;
 	var assetModifier:String;
 	var validScore:Bool;
 }
@@ -30,6 +32,7 @@ class Song
 {
 	public var song:String;
 	public var notes:Array<SwagSection>;
+	public var events:Array<Dynamic>;
 	public var bpm:Float;
 	public var needsVoices:Bool = true;
 	public var speed:Float = 1;

@@ -77,4 +77,26 @@ class Conductor
 		crochet = ((60 / bpm) * 1000);
 		stepCrochet = (crochet / 4) * measure;
 	}
+
+	public static function getBPMFromStep(step:Float){
+		var lastChange:BPMChangeEvent = {
+			stepTime: 0,
+			songTime: 0,
+			bpm: bpm,
+			stepCrochet: stepCrochet
+		}
+		for (i in 0...Conductor.bpmChangeMap.length)
+		{
+			if (Conductor.bpmChangeMap[i].stepTime<=step)
+				lastChange = Conductor.bpmChangeMap[i];
+		}
+
+		return lastChange;
+	}
+
+	public static function beatToSeconds(beat:Float): Float{
+		var step = beat * 4;
+		var lastChange = getBPMFromStep(step);
+		return lastChange.songTime + ((step - lastChange.stepTime) / (lastChange.bpm / 60)/4) * 1000; // TODO: make less shit and take BPM into account PROPERLY
+	}
 }
