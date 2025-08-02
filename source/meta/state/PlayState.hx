@@ -21,6 +21,7 @@ import flixel.util.FlxTimer;
 import gameObjects.*;
 import gameObjects.userInterface.*;
 import gameObjects.userInterface.notes.*;
+import gameObjects.userInterface.notes.Note.EventNote;
 import gameObjects.userInterface.notes.Strumline.UIStaticArrow;
 import meta.*;
 import meta.MusicBeat.MusicBeatState;
@@ -74,6 +75,7 @@ class PlayState extends MusicBeatState {
 	public static var changeableSkin:String = 'default';
 
 	private var unspawnNotes:Array<Note> = [];
+	private var eventNotes:Array<EventNote> = [];
 	private var ratingArray:Array<String> = [];
 	private var allSicks:Bool = true;
 
@@ -579,6 +581,7 @@ class PlayState extends MusicBeatState {
 					else focus = BF;
 				}
 			}
+			checkEventNote();
 			
 			camFollowPos.x = FlxMath.lerp(camFollow.x, camFollowPos.x, 1 - Main.framerateAdjust(0.2));
 			camFollowPos.y = FlxMath.lerp(camFollow.y, camFollowPos.y, 1 - Main.framerateAdjust(0.2));
@@ -629,6 +632,182 @@ class PlayState extends MusicBeatState {
 
 			eventHandler.onUpdate(elapsed);
 			if (!lockCamPos) updateCamFollow();
+		}
+	}
+
+	public function checkEventNote() {
+		while(eventNotes.length > 0) {
+			var leStrumTime:Float = eventNotes[0].strumTime;
+			if(Conductor.songPosition < leStrumTime) {
+				break;
+			}
+
+			var value1:String = '';
+			if(eventNotes[0].value1 != null)
+				value1 = eventNotes[0].value1;
+
+			var value2:String = '';
+			if(eventNotes[0].value2 != null)
+				value2 = eventNotes[0].value2;
+
+			triggerEventNote(eventNotes[0].event, value1, value2);
+			eventNotes.shift();
+		}
+	}
+
+	public function triggerEventNote(eventName:String, value1:String, value2:String) {
+		switch(eventName) {
+			case 'Hey!':
+				var value:Int = 2;
+				switch(value1.toLowerCase().trim()) {
+					case 'bf' | 'boyfriend' | '0':
+						value = 0;
+					case 'gf' | 'girlfriend' | '1':
+						value = 1;
+				}
+
+				var time:Float = Std.parseFloat(value2);
+				if(Math.isNaN(time) || time <= 0) time = 0.6;
+
+				if(value != 0) {
+					if(dadOpponent.curCharacter.startsWith('gf')) { //Tutorial GF is actually Dad! The GF is an imposter!! ding ding ding ding ding ding ding, dindinding, end my suffering
+						dadOpponent.playAnim('cheer', true);
+					} else if (gf != null) {
+						gf.playAnim('cheer', true);
+						
+					}
+				}
+				if(value != 1) {
+					boyfriend.playAnim('hey', true);
+				}
+
+			case 'Set GF Speed':
+				var value:Int = Std.parseInt(value1);
+				if(Math.isNaN(value) || value < 1) value = 1;
+				gfSpeed = value;
+
+			case 'Add Camera Zoom':
+				if(FlxG.camera.zoom < 1.35) {
+					var camZoom:Float = Std.parseFloat(value1);
+					var hudZoom:Float = Std.parseFloat(value2);
+					if(Math.isNaN(camZoom)) camZoom = 0.015;
+					if(Math.isNaN(hudZoom)) hudZoom = 0.03;
+
+					FlxG.camera.zoom += camZoom;
+					camHUD.zoom += hudZoom;
+				}
+
+			case 'Play Animation':
+				//trace('Anim to play: ' + value1);
+				var char:Character = dadOpponent;
+				switch(value2.toLowerCase().trim()) {
+					case 'bf' | 'boyfriend':
+						char = boyfriend;
+					case 'gf' | 'girlfriend':
+						char = gf;
+					default:
+						var val2:Int = Std.parseInt(value2);
+						if(Math.isNaN(val2)) val2 = 0;
+
+						switch(val2) {
+							case 1: char = boyfriend;
+							case 2: char = gf;
+						}
+				}
+
+				if (char != null)
+				{
+					char.playAnim(value1, true);
+				}
+
+			case 'Camera Follow Pos':
+				if(camFollow != null)
+				{
+					var val1:Float = Std.parseFloat(value1);
+					var val2:Float = Std.parseFloat(value2);
+					if(Math.isNaN(val1)) val1 = 0;
+					if(Math.isNaN(val2)) val2 = 0;
+
+					if(!Math.isNaN(Std.parseFloat(value1)) || !Math.isNaN(Std.parseFloat(value2))) {
+						camFollow.x = val1;
+						camFollow.y = val2;
+					}
+				}
+
+			case 'Screen Shake':
+				var valuesArray:Array<String> = [value1, value2];
+				var targetsArray:Array<FlxCamera> = [camGame, camHUD];
+				for (i in 0...targetsArray.length) {
+					var split:Array<String> = valuesArray[i].split(',');
+					var duration:Float = 0;
+					var intensity:Float = 0;
+					if(split[0] != null) duration = Std.parseFloat(split[0].trim());
+					if(split[1] != null) intensity = Std.parseFloat(split[1].trim());
+					if(Math.isNaN(duration)) duration = 0;
+					if(Math.isNaN(intensity)) intensity = 0;
+
+					if(duration > 0 && intensity != 0) {
+						targetsArray[i].shake(intensity, duration);
+					}
+				}
+
+
+			case 'Change Character':
+				var charType:Int = 0;
+				switch(value1.toLowerCase().trim()) {
+					case 'gf' | 'girlfriend':
+						charType = 2;
+					case 'dad' | 'opponent':
+						charType = 1;
+					default:
+						charType = Std.parseInt(value1);
+						if(Math.isNaN(charType)) charType = 0;
+				}
+
+				switch(charType) {
+					case 0:
+						if(boyfriend.curCharacter != value2) {
+							
+
+							var lastAlpha:Float = boyfriend.alpha;
+							boyfriend.alpha = 0.00001;
+							boyfriend.setCharacter(boyfriend.x, boyfriend.y, value2);
+							boyfriend.alpha = lastAlpha;
+							uiHUD.iconP1.updateIcon(boyfriend.curCharacter, true);
+						}
+
+					case 1:
+						if(dadOpponent.curCharacter != value2) {
+							
+
+							var wasGf:Bool = dadOpponent.curCharacter.startsWith('gf');
+							var lastAlpha:Float = dadOpponent.alpha;
+							dadOpponent.alpha = 0.00001;
+							dadOpponent.setCharacter(dadOpponent.x, dadOpponent.y, value2);
+							if(!dadOpponent.curCharacter.startsWith('gf')) {
+								if(wasGf && gf != null) {
+									gf.visible = true;
+								}
+							} else if(gf != null) {
+								gf.visible = false;
+							}
+							dadOpponent.alpha = lastAlpha;
+							uiHUD.iconP2.updateIcon(dadOpponent.curCharacter, false);
+						}
+
+					case 2:
+						if(gf != null)
+						{
+							if(gf.curCharacter != value2)
+							{
+
+								var lastAlpha:Float = gf.alpha;
+								gf.alpha = 0.00001;
+								gf.setCharacter(gf.x, gf.y, value2);
+								gf.alpha = lastAlpha;
+							}
+						}
+				}
 		}
 	}
 
@@ -1254,13 +1433,22 @@ class PlayState extends MusicBeatState {
 		unspawnNotes = ChartLoader.generateChart(SONG);
 		// sometime my brain farts dont ask me why these functions were separated before
 
+		// generate the events
+		eventNotes = ChartLoader.generateEvents(SONG);
+
 		// sort through them
 		unspawnNotes.sort(sortByShit);
+		if(eventNotes.length > 1) { //No need to sort if there's a single one or none at all
+			eventNotes.sort(sortByTime);
+		}
+		checkEventNote();
 		// give the game the heads up to be able to start
 		generatedMusic = true;
 	}
 
 	function sortByShit(Obj1:Note, Obj2:Note):Int return FlxSort.byValues(FlxSort.ASCENDING, Obj1.strumTime, Obj2.strumTime);
+
+	function sortByTime(Obj1:EventNote, Obj2:EventNote):Int return FlxSort.byValues(FlxSort.ASCENDING, Obj1.strumTime, Obj2.strumTime);
 
 	function resyncVocals():Void {
 		//trace('resyncing vocal time ${vocals.time}');

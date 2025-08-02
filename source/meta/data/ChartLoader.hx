@@ -4,6 +4,7 @@ import flixel.FlxG;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import gameObjects.userInterface.notes.*;
+import gameObjects.userInterface.notes.Note.EventNote;
 import meta.data.Section.SwagSection;
 import meta.data.Song.SwagSong;
 import meta.state.PlayState;
@@ -80,5 +81,23 @@ class ChartLoader {
 			daBeats += 1;
 		}
 		return unspawnNotes;
+	}
+
+	public static function generateEvents(songData:SwagSong):Array<EventNote> {
+		var eventNotes:Array<EventNote> = [];
+		if (songData.events == null) return eventNotes;
+		for(event in songData.events) {
+			for(i in 0...event[1].length) {
+				var newEventNote:Array<Dynamic> = [event[0], event[1][i][0], event[1][i][1], event[1][i][2]];
+				var subEvent:EventNote = {
+					strumTime: newEventNote[0],
+					event: newEventNote[1],
+					value1: newEventNote[2],
+					value2: newEventNote[3]
+				};
+				eventNotes.push(subEvent);
+			}
+		}
+		return eventNotes;
 	}
 }
