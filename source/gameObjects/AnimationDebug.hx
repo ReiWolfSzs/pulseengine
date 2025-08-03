@@ -39,7 +39,7 @@ class AnimationDebug extends FlxState {
 		camHUD.bgColor.alpha = 0;
 		FlxG.cameras.add(camHUD, false);
 
-		var gridBG:FlxSprite = FlxGridOverlay.create(10, 10);
+		var gridBG:FlxSprite = FlxGridOverlay.create(500, 500);
 		gridBG.scrollFactor.set(0.5, 0.5);
 		add(gridBG);
 
@@ -53,7 +53,6 @@ class AnimationDebug extends FlxState {
 
 		textAnim = new FlxText(300, 16);
 		textAnim.size = 26;
-		textAnim.scrollFactor.set();
 		add(textAnim);
 
 		textAnim.cameras = [camHUD];
