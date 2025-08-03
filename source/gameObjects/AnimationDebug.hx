@@ -43,12 +43,10 @@ class AnimationDebug extends FlxState {
 		gridBG.scrollFactor.set(0.5, 0.5);
 		add(gridBG);
 
-		char = new Character();
-		char.setCharacter(0, 0, 'matt');
+		char = new Character(false);
+		char.setCharacter(0, 0, 'dad');
 		char.screenCenter();
 		add(char);
-
-		char.flipX = false;
 
 		dumbTexts = new FlxTypedGroup<FlxText>();
 		add(dumbTexts);
@@ -90,7 +88,7 @@ class AnimationDebug extends FlxState {
 	public static function saveText(path:String, content:String):Void {
 		try {
 			var offset:String = 'Offsets';
-			var file:FileOutput = File.write(Paths.offsetTxt('matt' + offset), false); // false = sobrescreve
+			var file:FileOutput = File.write(Paths.offsetTxt('dad' + offset), false); // false = sobrescreve
 			file.writeString(
 				'idle 0 0\n' +
 				'singLEFT 0 0\n' +

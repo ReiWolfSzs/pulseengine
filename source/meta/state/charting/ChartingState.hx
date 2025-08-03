@@ -73,11 +73,13 @@ class ChartingState extends MusicBeatState
 		'GF Sing',
 		'No Animation'
 	];
+
 	private var noteTypeIntMap:Map<Int, String> = new Map<Int, String>();
 	private var noteTypeMap:Map<String, Null<Int>> = new Map<String, Null<Int>>();
 	public var ignoreWarnings = false;
 	var undos = [];
 	var redos = [];
+	
 	var eventStuff:Array<Dynamic> =
 	[
 		['', "Nothing. Yep, that's right."],
@@ -88,6 +90,7 @@ class ChartingState extends MusicBeatState
 		['Camera Follow Pos', "Value 1: X\nValue 2: Y\n\nThe camera won't change the follow point\nafter using this, for getting it back\nto normal, leave both values blank."],
 		['Screen Shake', "Value 1: Camera shake\nValue 2: HUD shake\n\nEvery value works as the following example: \"1, 0.05\".\nThe first number (1) is the duration.\nThe second number (0.05) is the intensity."],
 		['Change Character', "Value 1: Character to change (Dad, BF, GF)\nValue 2: New character's name"],
+		['Change Scroll Speed', "Value 1: Define a number for scroll\nValue 2: Define a time for scroll"]
 	];
 
 	var _file:FileReference;
@@ -213,7 +216,7 @@ class ChartingState extends MusicBeatState
 				needsVoices: true,
 				noteSkin: '',
 				assetModifier: '',
-				splashSkin: 'noteSplashes',//idk it would crash if i didn't
+				splashSkin: 'noteSplashes',
 				player1: 'bf',
 				player2: 'dad',
 				player3: 'bf',
@@ -225,9 +228,6 @@ class ChartingState extends MusicBeatState
 			addSection();
 			PlayState.SONG = _song;
 		}
-
-		// Paths.clearMemory();
-
 
 		vortex = FlxG.save.data.chart_vortex;
 		ignoreWarnings = FlxG.save.data.ignoreWarnings;
@@ -242,7 +242,7 @@ class ChartingState extends MusicBeatState
 		waveformSprite = new FlxSprite(GRID_SIZE, 0).makeGraphic(FlxG.width, FlxG.height, 0x00FFFFFF);
 		add(waveformSprite);
 
-		var eventIcon:FlxSprite = new FlxSprite(-GRID_SIZE - 5, -90).loadGraphic(Paths.image('menus/chart/eventArrow'));
+		var eventIcon:FlxSprite = new FlxSprite(-GRID_SIZE - 5, -90).loadGraphic(Paths.image('menus/chart/event_icon'));
 		leftIcon = new HealthIcon('bf');
 		rightIcon = new HealthIcon('dad');
 		eventIcon.scrollFactor.set(1, 1);
@@ -2693,6 +2693,7 @@ class ChartingState extends MusicBeatState
 			changeBPM: false,
 			mustHitSection: true,
 			mustSecondOpponentSection: false,
+			noteSpeed: 1,
 			gfSection: false,
 			lengthInSteps: 16,
 			sectionNotes: [],

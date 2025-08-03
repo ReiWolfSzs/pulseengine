@@ -42,7 +42,6 @@ class Character extends FNFSprite
 	public var characterData:CharacterData;
 	public var adjustPos:Bool = true;
 
-	public var direct:String = 'assets/collection';
 	public var lastHit:Float = Math.NEGATIVE_INFINITY;
 	public var singAnims = ["singLEFT", "singDOWN", "singUP", "singRIGHT"];
 
@@ -52,10 +51,8 @@ class Character extends FNFSprite
 		this.isPlayer = isPlayer;
 	}
 
-	public function setCharacter(x:Float, y:Float, character:String):Character
-	{
+	public function setCharacter(x:Float, y:Float, character:String):Character {
 		curCharacter = character;
-		var tex:FlxAtlasFrames;
 		antialiasing = true;
 
 		characterData = {
@@ -91,22 +88,16 @@ class Character extends FNFSprite
 				playAnim('idle');
 
 				flipX = true;
-				characterData.offsetY = -70;
-			case 'matt':
-				frames = Paths.getSparrowAtlas('characters/matt');
+			case 'dad':
+				frames = Paths.getSparrowAtlas('characters/dad');
 				animation.addByPrefix('idle', 'idle', 24, false);
-				animation.addByPrefix('singUP', 'up', 24, false);
-				animation.addByPrefix('singLEFT', 'left', 24, false);
-				animation.addByPrefix('singRIGHT', 'right', 24, false);
-				animation.addByPrefix('singDOWN', 'down', 24, false);
+				animation.addByPrefix('singUP', 'singUP', 24, false);
+				animation.addByPrefix('singLEFT', 'singLEFT', 24, false);
+				animation.addByPrefix('singRIGHT', 'singRIGHT', 24, false);
+				animation.addByPrefix('singDOWN', 'singDOWN', 24, false);
 				playAnim('idle');
-
-				characterData.camOffsetX = 250;
-				characterData.camOffsetY = -70;
 			case 'gf':
-				// GIRLFRIEND CODE
-				tex = Paths.getSparrowAtlas('characters/GF_assets');
-				frames = tex;
+				frames = Paths.getSparrowAtlas('characters/GF_assets');
 				animation.addByPrefix('cheer', 'GF Cheer', 24, false);
 				animation.addByPrefix('singLEFT', 'GF left note', 24, false);
 				animation.addByPrefix('singRIGHT', 'GF Right Note', 24, false);
@@ -119,8 +110,6 @@ class Character extends FNFSprite
 				animation.addByIndices('hairFall', "GF Dancing Beat Hair Landing", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "", 24, false);
 				animation.addByPrefix('scared', 'GF FEAR', 24);
 				playAnim('danceRight');
-
-				characterData.offsetY = -70;
 			default:
 				var fileNew = curCharacter + 'Anims';
 				if (OpenFlAssets.exists(Paths.offsetTxt(fileNew))) {
@@ -149,16 +138,11 @@ class Character extends FNFSprite
 		if (isPlayer) {
 			flipX = !flipX;
 
-			if (!curCharacter.startsWith('bf')) {
-				flipLeftRight();
-			}
-		} else if (curCharacter.startsWith('bf')) {
-			flipLeftRight();
-		}
+			if (!curCharacter.startsWith('bf')) flipLeftRight();
+		} else if (curCharacter.startsWith('bf')) flipLeftRight();
 
 		if (adjustPos) {
 			x += characterData.offsetX;
-			//trace('character ${curCharacter} scale ${scale.y}');
 			y += (characterData.offsetY - (frameHeight * scale.y));
 		}
 
@@ -196,12 +180,9 @@ class Character extends FNFSprite
 
 	override function update(elapsed:Float) {
 		if (!isPlayer) {
-			if (animation.curAnim.name.startsWith('sing')) {
-				holdTimer += elapsed;
-			}
+			if (animation.curAnim.name.startsWith('sing')) holdTimer += elapsed;
 
 			var dadVar:Float = 4;
-
 			if (holdTimer >= Conductor.stepCrochet * dadVar * 0.001) {
 				dance();
 				holdTimer = 0;
@@ -209,13 +190,10 @@ class Character extends FNFSprite
 		}
 
 		var curCharSimplified:String = simplifyCharacter();
-		switch (curCharSimplified)
-		{
+		switch (curCharSimplified) {
 			case 'gf':
-				if (animation.curAnim.name == 'hairFall' && animation.curAnim.finished)
-					playAnim('danceRight');
-				if ((animation.curAnim.name.startsWith('sad')) && (animation.curAnim.finished))
-					playAnim('danceLeft');
+				if (animation.curAnim.name == 'hairFall' && animation.curAnim.finished) playAnim('danceRight');
+				if ((animation.curAnim.name.startsWith('sad')) && (animation.curAnim.finished)) playAnim('danceLeft');
 		}
 
 		// Post idle animation (think Week 4 and how the player and mom's hair continues to sway after their idle animations are done!)
@@ -227,17 +205,10 @@ class Character extends FNFSprite
 	}
 
 	private var danced:Bool = false;
-
-	/**
-	 * FOR GF DANCING SHIT
-	 */
-	public function dance(?forced:Bool = false)
-	{
-		if (!debugMode)
-		{
+	public function dance(?forced:Bool = false) {
+		if (!debugMode) {
 			var curCharSimplified:String = simplifyCharacter();
-			switch (curCharSimplified)
-			{
+			switch (curCharSimplified) {
 				case 'gf':
 					if ((!animation.curAnim.name.startsWith('hair')) && (!animation.curAnim.name.startsWith('sad'))) {
 						danced = !danced;
@@ -255,25 +226,20 @@ class Character extends FNFSprite
 	}
 
 	override public function playAnim(AnimName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0):Void {
-		if (animation.getByName(AnimName) != null)
-			super.playAnim(AnimName, Force, Reversed, Frame);
+		if (animation.getByName(AnimName) != null) super.playAnim(AnimName, Force, Reversed, Frame);
 
 		if (curCharacter == 'gf') {
-			if (AnimName == 'singLEFT')
-				danced = true;
-			else if (AnimName == 'singRIGHT')
-				danced = false;
+			if (AnimName == 'singLEFT') danced = true;
+			else if (AnimName == 'singRIGHT') danced = false;
 
-			if (AnimName == 'singUP' || AnimName == 'singDOWN')
-				danced = !danced;
+			if (AnimName == 'singUP' || AnimName == 'singDOWN') danced = !danced;
 		}
 	}
 
 	public function simplifyCharacter():String {
 		var base = curCharacter;
 
-		if (base.contains('-'))
-			base = base.substring(0, base.indexOf('-'));
+		if (base.contains('-')) base = base.substring(0, base.indexOf('-'));
 		return base;
 	}
 }

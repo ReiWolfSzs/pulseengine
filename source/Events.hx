@@ -26,7 +26,11 @@ class Events {
     public function new(name:String) {
         songName = name;
         switch (songName) {
-
+			case 'bopeebo-erect':
+				FlxG.updateFramerate = 120;
+				FlxG.drawFramerate = 120;
+				game.dadOpponent.x = 100;
+				game.dadOpponent.angle = 100;
         }
     }
 
@@ -52,8 +56,11 @@ class Events {
 
     public function onUpdate(elapsed:Float) {
         switch (songName) {
-			
-        }
+			case 'bopeebo-erect':
+				var speed:Float = 60;
+				game.dadOpponent.x += speed * elapsed;
+				game.dadOpponent.angle += speed * elapsed;
+			}
     }
 
 	public function onSection(section:Int) {

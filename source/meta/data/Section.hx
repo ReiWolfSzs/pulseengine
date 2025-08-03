@@ -9,6 +9,7 @@ typedef SwagSection =
 	var typeOfSection:Int;
 	var mustHitSection:Bool;
 	var mustSecondOpponentSection:Bool;
+	var noteSpeed:Float;
 	var bpm:Float;
 	var changeBPM:Bool;
 	var altAnim:Bool;

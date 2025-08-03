@@ -655,6 +655,7 @@ class PlayState extends MusicBeatState {
 		}
 	}
 
+	var scrollSpeedTween:FlxTween;
 	public function triggerEventNote(eventName:String, value1:String, value2:String) {
 		switch(eventName) {
 			case 'Hey!':
@@ -670,7 +671,7 @@ class PlayState extends MusicBeatState {
 				if(Math.isNaN(time) || time <= 0) time = 0.6;
 
 				if(value != 0) {
-					if(dadOpponent.curCharacter.startsWith('gf')) { //Tutorial GF is actually Dad! The GF is an imposter!! ding ding ding ding ding ding ding, dindinding, end my suffering
+					if(dadOpponent.curCharacter.startsWith('gf')) {
 						dadOpponent.playAnim('cheer', true);
 					} else if (gf != null) {
 						gf.playAnim('cheer', true);
@@ -698,7 +699,6 @@ class PlayState extends MusicBeatState {
 				}
 
 			case 'Play Animation':
-				//trace('Anim to play: ' + value1);
 				var char:Character = dadOpponent;
 				switch(value2.toLowerCase().trim()) {
 					case 'bf' | 'boyfriend':
@@ -808,6 +808,52 @@ class PlayState extends MusicBeatState {
 							}
 						}
 				}
+			case 'change Scroll Speed':
+				var val1:Int = Std.parseInt(value1);
+				var val2:Int = Std.parseInt(value2);
+				// Calcula a nova velocidade
+				var newValue:Float = SONG.speed * val1;
+
+				// Cancela tween anterior, se houver
+				if (scrollSpeedTween != null && !scrollSpeedTween.finished)
+					scrollSpeedTween.cancel();
+
+				if (val2 <= 0) {
+					// Aplica imediatamente
+					SONG.speed = newValue;
+
+					for (note in unspawnNotes) {
+						if (note != null)
+							note.noteSpeed = newValue;
+					}
+					for (note in SONG.notes) {
+						if (note != null)
+							note.noteSpeed = newValue;
+					}
+				} else {
+					// Objeto para interpolação
+					var tweenObj:Dynamic = {speed: SONG.speed};
+
+					scrollSpeedTween = FlxTween.tween(tweenObj, {speed: newValue}, val2 * (Conductor.stepCrochet / 1000), {
+						ease: FlxEase.linear,
+						onUpdate: function(twn:FlxTween) {
+							SONG.speed = tweenObj.speed;
+
+							for (note in unspawnNotes) {
+								if (note != null)
+									note.noteSpeed = tweenObj.speed;
+							}
+							for (note in SONG.notes) {
+								if (note != null)
+									note.noteSpeed = tweenObj.speed;
+							}
+						},
+						onComplete: function(twn:FlxTween) {
+							scrollSpeedTween = null;
+						}
+					});
+				}
+				trace('changing scroll speed');
 		}
 	}
 
